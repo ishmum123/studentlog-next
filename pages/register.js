@@ -1,4 +1,5 @@
 import {useState} from "react";
+import List from "../modules/registration/list";
 
 export default function Register() {
     const [studentName, setStudentName] = useState("");
@@ -40,6 +41,7 @@ export default function Register() {
                 onClick={callJsonPlaceholder}>
                 Submit
             </button>
+            <List />
         </form>
     );
 }
