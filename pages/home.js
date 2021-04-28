@@ -1,4 +1,4 @@
-import { withTranslation } from "../src/i18n";
+import { withTranslation } from "../next-i18next.config";
 
 const Home = ({ t }) => {
 

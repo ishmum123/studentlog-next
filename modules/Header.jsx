@@ -1,5 +1,5 @@
 
-import { Link, withTranslation } from "../src/i18n";
+import { Link, withTranslation } from "../next-i18next.config";
 import { useRouter } from "next/router";
 import LocalePicker from "./LocalePicker";
 

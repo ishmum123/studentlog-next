@@ -1,12 +1,5 @@
-/*import '../styles/globals.css'
-
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
-}
-
-export default MyApp*/
 import App from "next/app";
-import {appWithTranslation} from "../src/i18n";
+import {appWithTranslation} from "../next-i18next.config";
 import Header from "../modules/Header";
 
 const MyApp = ({Component, pageProps}) => {

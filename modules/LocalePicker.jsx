@@ -1,5 +1,5 @@
 
-import {i18n, config, Link} from "../src/i18n";
+import {i18n, config, Link} from "../next-i18next.config";
 import { I18nContext } from "next-i18next";
 import { useContext } from "react";
 
