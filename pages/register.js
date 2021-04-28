@@ -1,6 +1,7 @@
 import {useState} from "react";
 import List from "../modules/registration/list";
 
+//TODO: remove this page later. this file is for template use.
 export default function Register() {
     const [studentName, setStudentName] = useState("");
     const [studentRegId, setStudentRegId] = useState("");
