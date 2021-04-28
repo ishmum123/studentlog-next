@@ -1,9 +1,7 @@
 const { nextI18NextRewrites } = require("next-i18next/rewrites");
 
 const localeSubpaths = {
-  nl: "nl",
-  no: "no",
-  es: "es",
+  en: "en",
   bn: "bn"
 };
 

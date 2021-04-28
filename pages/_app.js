@@ -6,21 +6,21 @@ function MyApp({ Component, pageProps }) {
 
 export default MyApp*/
 import App from "next/app";
-import { appWithTranslation } from "../src/i18n";
+import {appWithTranslation} from "../src/i18n";
 import Header from "../modules/Header";
 
-const MyApp = ({ Component, pageProps }) => {
-  return (
-      <>
-          <Header />
+const MyApp = ({Component, pageProps}) => {
+    return (
+        <>
+            <Header/>
 
-        <Component {...pageProps} />
-      </>
-  );
+            <Component {...pageProps} />
+        </>
+    );
 };
 
 async function getProps(appContext) {
-  return await App.getInitialProps(appContext);
+    return await App.getInitialProps(appContext);
 }
 
 MyApp.getInitialProps = getProps;

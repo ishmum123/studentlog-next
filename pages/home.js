@@ -5,10 +5,8 @@ const Home = ({ t }) => {
     return (
         <>
             <div>
-                Hello wolrd
+                {t("welcomeMessage")}
             </div>
-
-            <div>{t("welcomeMessage")}</div>
         </>
     );
 }

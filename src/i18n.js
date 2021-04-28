@@ -3,11 +3,9 @@ const path = require("path");
 
 module.exports = new NextI18Next({
   defaultLanguage: "en",
-  otherLanguages: ["nl", "no", "es","bn"],
+  otherLanguages: ["en","bn"],
   localeSubpaths: {
-    nl: "nl",
-    no: "no",
-    es: "es",
+    es: "en",
     bn: "bn",
   },
   localePath: path.resolve("./public/static/locales"),

@@ -15,10 +15,9 @@ const Header = ({ t }) => {
       <>
         {buttons.map((button) => (
             <Link key={button.text} href={button.path}>
-              {/*<Menu.Item active={pathname === button.path}>
-                <Icon name={button.icon} />*/}
+
                 {t(button.text)}
-             {/* </Menu.Item>*/}
+
             </Link>
         ))}
 
