@@ -4,8 +4,7 @@ import Link from "next/link";
 
 const student_application_api_address = "http://localhost:3001/student_application"
 
-// used server side rendering for now. need discussion and further understanding
-export async function getServerSideProps({ params }) {
+export async function getStaticProps({ params }) {
     const res = await fetch(student_application_api_address)
     const applications = await res.json()
 
@@ -20,6 +19,7 @@ export async function getServerSideProps({ params }) {
     // Pass applications data to the page via props
     return {
         props: { applications },
+        revalidate: 1,
         notFound: false
     }
 }

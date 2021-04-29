@@ -12,6 +12,7 @@ export default function NewApplication() {
     const [applicationId, setApplicationId] = useState(null);
 
     useEffect(() => { // side effect hook
+        //generating a blank form for getting a unique id for saving as draft
         axios.post(student_application_api_address, ).then(resp => {
             console.log(resp.data);
             setApplicationId(resp.data.id);

@@ -12,6 +12,7 @@ export default function ApplicationForm(props){
     const router = useRouter();
 
     const applicationId = props.applicationId;
+    const retrievedData = props.retrievedData
 
     const [name, setName] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState("");
@@ -26,24 +27,26 @@ export default function ApplicationForm(props){
     const [appliedForGrade, setAppliedForGrade] = useState("");
 
     useEffect(() => { // side effect hook
-        console.log(props.retrievedData);
-        setName(props.retrievedData.name ? String(props.retrievedData.name) : "");
-        setDateOfBirth(props.retrievedData.date_of_birth ?
-            String(props.retrievedData.date_of_birth).split(" ")[0] : "");
-        setBloodGroup(props.retrievedData.blood_group ? String(props.retrievedData.blood_group) : "");
-        setBirthRegistrationId(props.retrievedData.birth_registration_id ?
-            String(props.retrievedData.birth_registration_id) : "");
-        setRegistrationId(props.retrievedData.registration_id ? String(props.retrievedData.registration_id) : "");
-        setPresentAddress(props.retrievedData.present_address ? String(props.retrievedData.present_address) : "");
-        setPermanentAddress(props.retrievedData.permanent_address ?
-            String(props.retrievedData.permanent_address) : "");
-        setGuardianName(props.retrievedData.guardian_name ? String(props.retrievedData.guardian_name) : "");
-        setGuardianEmail(props.retrievedData.guardian_email ? String(props.retrievedData.guardian_email) : "");
-        setGuardianPhone(props.retrievedData.guardian_phone ? String(props.retrievedData.guardian_phone) : "");
-        setAppliedForGrade(props.retrievedData.applied_for_grade ?
-            String(props.retrievedData.applied_for_grade) : "");
+        if(!retrievedData){
+            return
+        }
+        setName(retrievedData.name ? String(retrievedData.name) : "");
+        setDateOfBirth(retrievedData.date_of_birth ?
+            String(retrievedData.date_of_birth).split(" ")[0] : "");
+        setBloodGroup(retrievedData.blood_group ? String(retrievedData.blood_group) : "");
+        setBirthRegistrationId(retrievedData.birth_registration_id ?
+            String(retrievedData.birth_registration_id) : "");
+        setRegistrationId(retrievedData.registration_id ? String(retrievedData.registration_id) : "");
+        setPresentAddress(retrievedData.present_address ? String(retrievedData.present_address) : "");
+        setPermanentAddress(retrievedData.permanent_address ?
+            String(retrievedData.permanent_address) : "");
+        setGuardianName(retrievedData.guardian_name ? String(retrievedData.guardian_name) : "");
+        setGuardianEmail(retrievedData.guardian_email ? String(retrievedData.guardian_email) : "");
+        setGuardianPhone(retrievedData.guardian_phone ? String(retrievedData.guardian_phone) : "");
+        setAppliedForGrade(retrievedData.applied_for_grade ?
+            String(retrievedData.applied_for_grade) : "");
 
-    }, [props.retrievedData]);
+    }, [retrievedData]);
 
     const isValidName = name.match(/^(\w| ){5,50}$/);
     const isValidDateOfBirth = dateOfBirth.match(/^[\d]{4}-[\d]{2}-[\d]{2}$/);
@@ -75,10 +78,10 @@ export default function ApplicationForm(props){
             alert("Error. Application ID: " + applicationId);
             router.push("/registration");
         }
-        const post_body = {
+        const application_body = {
             id: applicationId,
             applied_date: getDate(),
-            approved_by_id: null,
+            decision_by_id: null,
             name: name,
             date_of_birth: dateOfBirth + " 06:00:01",
             blood_group: bloodGroup,
@@ -92,17 +95,18 @@ export default function ApplicationForm(props){
             applied_for_grade: appliedForGrade,
             status: status
         };
-        console.log(post_body);
+        console.log(application_body);
 
-        axios.patch(student_application_api_address+"/"+applicationId, post_body).then(resp => {
+        axios.patch(student_application_api_address+"/"+applicationId, application_body).then(resp => {
             console.log(resp.data);
             if(status === "draft"){
                 alert("Draft saved. Application ID: " + applicationId)
+                router.push("/registration");
             }
             else if(status === "submitted"){
                 alert("Application Submitted.")
+                router.push("/registration/application/"+applicationId);
             }
-            router.push("/registration");
         }).catch(error => {
             console.log(error);
             alert("Error occurred: \n"+ JSON.stringify(error))

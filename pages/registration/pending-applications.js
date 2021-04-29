@@ -4,8 +4,7 @@ import Link from "next/link";
 
 const student_application_api_address = "http://localhost:3001/student_application"
 
-// used server side rendering for now. need discussion and further understanding
-export async function getServerSideProps({ params }) {
+export async function getStaticProps({ params }) {
     const res = await fetch(student_application_api_address)
     const applications = await res.json()
 
@@ -14,16 +13,15 @@ export async function getServerSideProps({ params }) {
             notFound: true,
         }
     }
+
+    const pendingApplications = applications.filter(a => a.status === "submitted")
     // console.log("applications:")
     // console.log(applications);
-
-    //TODO: add submitted flag in db
-    //this filter includes if submitted flag is absent from application
-    const pendingApplications = applications.filter(a => a.status === "submitted")
 
     // Pass applications data to the page via props
     return {
         props: { pendingApplications },
+        revalidate: 1,
         notFound: false
     }
 }

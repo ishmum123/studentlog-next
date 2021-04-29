@@ -66,7 +66,6 @@ export default function DraftApplication() {
                                 onChange={event => setApplicationId(event.target.value)}
                             />
                             <button
-                                disabled={!applicationId}
                                 type="button"
                                 disabled={applicationData}
                                 onClick={retrieveApplication}>

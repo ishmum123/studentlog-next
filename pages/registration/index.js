@@ -13,7 +13,7 @@ export default function RegistrationHome() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to Student Registration Home
+         Student Registration Home
         </h1>
 
         <h2>
