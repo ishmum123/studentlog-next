@@ -5,7 +5,7 @@ const AttendanceList = (props) => {
   return (
     <div>
       <ol>
-        { attendanceList.map((attendance) => (
+        { attendanceList && attendanceList.map((attendance) => (
           <li>
             <Attendance key={ attendance.id} attendance={ attendance }/>
           </li>
