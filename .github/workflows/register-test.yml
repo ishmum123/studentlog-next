@@ -4,13 +4,23 @@ jobs:
   cypress-run:
     runs-on: ubuntu-latest
     steps:
-      - name: Project run
-        run:  npm start dev
-        
-      - name: Checkout
+      - name: Clone repository
         uses: actions/checkout@v2
-
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Install dependencies
+        run: npm install
+        env:
+          CI: true
+      - name: Generate build
+        run: npm run build
+      # Share artifact inside workflow
+      - name: Share artifact inside workflow
+        uses: actions/upload-artifact@v1
+        with:
+          name: react-github-actions-build
+          path: build
       
       
