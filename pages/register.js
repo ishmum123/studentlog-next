@@ -1,5 +1,6 @@
 import {useState} from "react";
 import List from "../modules/registration/list";
+import 'bootstrap/dist/css/bootstrap.css';
 
 //TODO: remove this page later. this file is for template use.
 export default function Register() {
@@ -20,23 +21,35 @@ export default function Register() {
     return (
         <form action="none">
             <div>
-                <label htmlFor="student_name">Student Name:</label>
-                <input
-                    value={studentName}
-                    id="student_name"
-                    type="text"
-                    onChange={event => setStudentName(event.target.value)} />
+                <div class = "row">
+                    <div class = "col-md-2">
+                    <label htmlFor="student_name">Student Name:</label>
+                    </div>
+                    <div class = "col-md-6">
+                        <input class = "form-control"
+                        value={studentName}
+                        id="student_name"
+                        type="text"
+                        onChange={event => setStudentName(event.target.value)} />
+                    </div>
+                </div>
             </div>
             <div>
-                <label htmlFor="student_birth_reg_id">Student Birth Registration ID:</label>
-                <input
-                    value={studentRegId}
-                    id="student_birth_reg_id"
-                    type="text"
-                    onChange={({ target: { value } }) => setStudentRegId(value)} />
-                {(studentRegId && !isValidRegId) && <p style={{color: 'red'}}>Invalid ID Entered</p>}
+                <div className="row">
+                    <div className="col-md-2">
+                        <label htmlFor="student_birth_reg_id">Student Birth Registration ID:</label>
+                    </div>
+                    <div className="col-md-6">
+                        <input class = "form-control"
+                        value={studentRegId}
+                        id="student_birth_reg_id"
+                        type="text"
+                        onChange={({ target: { value } }) => setStudentRegId(value)} />
+                        {(studentRegId && !isValidRegId) && <p style={{color: 'red'}}>Invalid ID Entered</p>}
+                    </div>
+                </div>
             </div>
-            <button
+            <button class = "btn btn-primary"
                 disabled={!isValidData}
                 type="button"
                 onClick={callJsonPlaceholder}>
