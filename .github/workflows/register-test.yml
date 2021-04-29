@@ -15,7 +15,7 @@ jobs:
         env:
           CI: true
       - name: Generate build
-        run: npm start dev
+        run: npm start
       - name: Checkout
         uses: actions/checkout@v2
       - name: Cypress run
