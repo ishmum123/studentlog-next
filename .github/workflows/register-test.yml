@@ -17,9 +17,6 @@ jobs:
       - name: Generate build
         run: npm start dev
       - name: Checkout
-          uses: actions/checkout@v2
+        uses: actions/checkout@v2
       - name: Cypress run
         uses: cypress-io/github-action@v2
-
-      
-      
