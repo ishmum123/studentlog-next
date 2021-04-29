@@ -60,7 +60,8 @@ export default function AllApplications({applications, notFound}) {
                         <Link href={"/registration/application/"+a.id}>
                             <a> Name: {a.name} <br/>
                                 Registration ID: {a.registration_id} <br/>
-                                Application Date: {String(a.applied_date).split(/[\sT]+/)[0]}
+                                Application Date: {String(a.applied_date).split(/[\sT]+/)[0]} <br/>
+                                Status: {a.status}
                             </a>
                         </Link>
                     </li>)}

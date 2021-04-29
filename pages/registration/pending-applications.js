@@ -19,10 +19,7 @@ export async function getServerSideProps({ params }) {
 
     //TODO: add submitted flag in db
     //this filter includes if submitted flag is absent from application
-    const pendingApplications = applications.filter(a =>
-        !a.approved_by_id
-        // && a.submitted
-)
+    const pendingApplications = applications.filter(a => a.status === "submitted")
 
     // Pass applications data to the page via props
     return {
@@ -67,7 +64,8 @@ export default function PendingApplications({pendingApplications, notFound}) {
                         <Link href={"/registration/application/"+a.id}>
                             <a> Name: {a.name} <br/>
                                 Registration ID: {a.registration_id} <br/>
-                                Application Date: {String(a.applied_date).split(/[\sT]+/)[0]}
+                                Application Date: {String(a.applied_date).split(/[\sT]+/)[0]} <br/>
+                                Status: {a.status}
                             </a>
                         </Link>
                     </li>)}
