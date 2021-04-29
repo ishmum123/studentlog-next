@@ -1,7 +1,8 @@
-import {useState} from "react";
+import {useState, useRef} from "react";
 import styles from '../../styles/Home.module.css'
 import Head from "next/head";
 import Link from "next/link";
+import FileBase64 from 'react-file-base64';
 
 
 const post_api_address = "http://localhost:3001/leave_application"
@@ -11,6 +12,8 @@ export default function NewApplication() {
     const [dateTo, setDateTo] = useState("");
     const [applicationBody, setApplicationBody] = useState("");
     const [supportedDocument, setSupportedDocument] = useState("");
+
+    const ref = useRef();
 
     const isValidApplicationBody = applicationBody.match(/^(\w| ){10,1000}$/);
 
@@ -47,6 +50,11 @@ export default function NewApplication() {
             console.log(error);
         });
 
+    }
+
+    const handleFileUpload = event => {
+        console.log(event);
+        setSupportedDocument(event)
     }
 
     return (
@@ -105,11 +113,10 @@ export default function NewApplication() {
 
                     <div>
                         <label htmlFor="supported_document">Supported Documents (if any): </label>
-                        <input
-                            value={supportedDocument}
-                            id="supported_document"
-                            type="file"
-                            onChange={event => setSupportedDocument(event.target.value)}/>
+                        <FileBase64
+                            ref={ref}
+                            multiple={false}
+                            onDone={handleFileUpload}/>
                     </div>
 
                     <button
