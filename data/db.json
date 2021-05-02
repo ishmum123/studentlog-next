@@ -1,10 +1,10 @@
 {
-  "attendances" : [
+  "attendances": [
     {
       "id": 1,
       "name": "Rahim",
       "rollNumber": 1,
-      "presenceStatus": false
+      "presenceStatus": true
     },
     {
       "id": 2,
@@ -16,7 +16,7 @@
       "id": 3,
       "name": "Abdul",
       "rollNumber": 3,
-      "presenceStatus": false
+      "presenceStatus": true
     },
     {
       "id": 4,
@@ -28,7 +28,7 @@
       "id": 5,
       "name": "Samin",
       "rollNumber": 5,
-      "presenceStatus": false
+      "presenceStatus": true
     },
     {
       "id": 6,
