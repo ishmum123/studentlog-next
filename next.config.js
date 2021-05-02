@@ -1,5 +1,6 @@
 const path = require("path");
-const i18nextHttpBackend = require("i18next-http-backend/cjs").default
+const i18nextHttpBackend = require("i18next-http-backend/cjs").default;
+
 module.exports = {
     i18n: {
         defaultLocale: "en",
