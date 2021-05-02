@@ -4,8 +4,8 @@ import Head from "next/head";
 import Link from "next/link";
 import FileBase64 from 'react-file-base64';
 
-
-const post_api_address = "http://localhost:3001/leave_application"
+const axios = require('axios');
+const leave_application_api_address = "http://localhost:3001/leave_application/";
 
 export default function NewApplication() {
     const [dateFrom, setDateFrom] = useState("");
@@ -19,7 +19,7 @@ export default function NewApplication() {
 
     const isValidData = dateFrom && dateTo && isValidApplicationBody;
 
-    const clearData = () =>{
+    const clearData = () => {
         setDateFrom("");
         setDateTo("");
         setApplicationBody("");
@@ -28,10 +28,12 @@ export default function NewApplication() {
 
     const postStudentApplicationData = () => {
         const confirmForm = confirm("Submit the form?");
-        if(!confirmForm){return}
+        if (!confirmForm) {
+            return
+        }
 
         const post_body = {
-            studentId: 1,
+            studentId: 1, //TODO: replace studentId: 1 with appropriate id
             dateFrom: dateFrom,
             dateTo: dateTo,
             applicationBody: applicationBody,
@@ -40,13 +42,12 @@ export default function NewApplication() {
         };
         console.log(post_body);
 
-        const axios = require('axios');
-        axios.post(post_api_address, post_body)
+        axios.post(leave_application_api_address, post_body)
             .then(resp => {
-            console.log(resp.data);
-            alert("Form Submitted successfully");   //TODO: check if actually successful
-            clearData();
-        }).catch(error => {
+                console.log(resp.data);
+                alert("Form Submitted successfully");   //TODO: check if actually successful
+                clearData();
+            }).catch(error => {
             console.log(error);
         });
 
@@ -75,6 +76,12 @@ export default function NewApplication() {
                     <p>
                         <Link href="/">
                             <a style={{color: "blue"}}>Home Page</a>
+                        </Link>
+                    </p>
+
+                    <p>
+                        <Link href="/leave-application">
+                            <a style={{color: "blue"}}>Leave Application Home Page</a>
                         </Link>
                     </p>
                 </div>
@@ -133,5 +140,5 @@ export default function NewApplication() {
             <footer className={styles.footer}>
             </footer>
         </div>
-);
+    );
 }
