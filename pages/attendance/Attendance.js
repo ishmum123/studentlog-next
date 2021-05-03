@@ -1,19 +1,18 @@
-import { useState } from "react";
+import PresenceInfo from "./PresenceInfo"
 
-
-const Attendance = (props) => {
-  const attendance = props.attendance
-  const pushUpdatedAttendanceFunction = props.pushUpdatedAttendanceFunction;
-  const [giveAttendance, setGiveAttendance] = useState(attendance.presenceStatus)
-
+const Attendance = ({attendance}) => {
   return (
     <div>
-        <ul style={{listStyleType: "none"}}>
-          <li>Name: { attendance.name }</li>
-          <li>Roll Number: { attendance.rollNumber }</li>
-          <li>Presence Status: { giveAttendance.toString() }</li>
-          <li><input type="checkbox" checked={ giveAttendance === true} onChange={ () => setGiveAttendance(!giveAttendance)} onClick={() => pushUpdatedAttendanceFunction(attendance)}/></li>
-        </ul>
+      <ul style={{listStyleType: "none"}}>
+        <li>Date: { attendance.date }</li>
+        <ol>
+          { attendance.attendance_list.map((student) => (
+            <li>
+              <PresenceInfo student={ student }/>
+            </li>
+        ))}
+        </ol>
+      </ul>
       <br />
     </div>
   );
