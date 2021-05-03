@@ -8,27 +8,26 @@ import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import ProductService from '../service/ProductService';
 
+export default function Test() {
 
-export default function test() {
-    let items = [
-                {label: 'Test',url: '/test'},
-                {label: 'Test Result', url: '/testResult'},
-    ]
-
+    const apiUrl = "http://localhost:9000/tests";
     const toast = useRef(null);
     const [products, setProducts] = useState([]);
     const productService = new ProductService();
-
-
-    // console.log(productService.getProducts());
-    useEffect(() => {
-        productService.getProducts().then(data => setProducts(data));
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
     const [subject, setSubject] = useState("");
     const [examiner, setExaminer] = useState("");
     const [date, setDate] = useState("");
     const [globalFilter, setGlobalFilter] = useState(null);
+
+    let items = [
+        {label: 'Test',url: '/test'},
+        {label: 'Test Result', url: '/testResult'},
+    ]
+
+    useEffect(() => {
+        productService.getProducts().then(data => setProducts(data));
+    }, []);
+
     function clearForm(){
         setSubject('');
         setExaminer('');
@@ -40,11 +39,9 @@ export default function test() {
         let calYear = date.getFullYear().toString();
         let formatted_date = calYear +'-' + calMonth.padStart(2, '0')+ '-' + calDate.padStart(2, '0');
         console.log(JSON.stringify({subject: subject, examiner: examiner, date: formatted_date}));
-        fetch('http://localhost:9000/tests',
+        fetch(apiUrl,
             {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: {'Content-Type': 'application/json'},
                 method: 'POST',
                 body: JSON.stringify({subject: subject, examiner: examiner, date: formatted_date})
             })
@@ -102,8 +99,7 @@ export default function test() {
                                    header={header}
                                    paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                                   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                        >
+                                   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
                             <Column field="subject" header="Subject" sortable></Column>
                             <Column field="examiner" header="Examiner" sortable></Column>
                             <Column field="date" header="Date" sortable></Column>

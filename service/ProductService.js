@@ -1,16 +1,10 @@
-import axios from 'axios';
-
 export default class ProductService {
-
     getProducts() {
-        return fetch('http://localhost:9000/tests',
+        const apiURL = 'http://localhost:9000/tests';
+        return fetch(apiURL,
             {
                 method: 'GET'
             })
             .then(response => response.json())
     }
-
-    // getProductsWithOrdersSmall() {
-    //     return axios.get('data/products-orders-small.json').then(res => res.data.data);
-    // }
 }
