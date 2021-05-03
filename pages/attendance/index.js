@@ -1,25 +1,12 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import AttendanceList from "./AttendanceList";
-
-const BASE_URL = "http://localhost:3001/attendances"
+import Link from 'next/link'
 
 const AttendanceHome = () => {
-  const [attendanceList, setAttendanceList] = useState("");
-  
-  useEffect( async () => {
-    await axios.get(BASE_URL)
-    .then(res => {
-      console.log(res.data)
-      setAttendanceList(res.data);
-    })
-    .catch(error => {
-      console.log("Error occured " + error);
-    })
-  }, [setAttendanceList])
-
   return (
-    <AttendanceList attendanceList={ attendanceList }/>
+    <div>
+      <Link href="/attendance/students"><h1>Student List</h1></Link>
+      <Link href="/attendance/list"><h1>Attendance List</h1></Link>
+    </div>
+
   );
 }
  
