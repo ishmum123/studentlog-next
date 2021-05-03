@@ -1,28 +1,39 @@
-import {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import { Menu } from 'primereact/menu';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { Calendar } from 'primereact/calendar';
+import {DataTable} from "primereact/datatable";
+import {Column} from "primereact/column";
+import ProductService from '../service/ProductService';
+
+
 export default function test() {
     let items = [
-        {
-            label: 'Test',
-            items:  [
-                        {label: 'New', icon: 'pi pi-fw pi-plus',command:()=>{ window.location.hash="/fileupload"; }},
-                        {label: 'Update', icon: 'pi pi-fw pi-undo', url: 'http://primetek.com.tr'},
-                        {label: 'Delete', icon: 'pi pi-fw pi-trash', url: 'http://primetek.com.tr'}
-                    ]
-        }
-        // {
-        //     label: 'Account',
-        //     items: [{label: 'Options', icon: 'pi pi-fw pi-cog',command:()=>{ window.location.hash="/"; }},
-        //         {label: 'Sign Out', icon: 'pi pi-fw pi-power-off'} ]
-        // }
+                {label: 'Test',url: '/test'},
+                {label: 'Test Result', url: '/testResult'},
     ]
+
+    const toast = useRef(null);
+    const [products, setProducts] = useState([]);
+    const productService = new ProductService();
+
+
+    // console.log(productService.getProducts());
+    useEffect(() => {
+        productService.getProducts().then(data => setProducts(data));
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
     const [subject, setSubject] = useState("");
     const [examiner, setExaminer] = useState("");
     const [date, setDate] = useState("");
+    const [globalFilter, setGlobalFilter] = useState(null);
+    function clearForm(){
+        setSubject('');
+        setExaminer('');
+        setDate('');
+    }
     const  SubmitForm = () => {
         let calDate = date.getDate().toString();
         let calMonth = (date.getMonth()+1).toString();
@@ -38,13 +49,25 @@ export default function test() {
                 body: JSON.stringify({subject: subject, examiner: examiner, date: formatted_date})
             })
             .then(response => response.json())
-            .then(json => console.log(json));
+            .then(json => setProducts([json, ...products]))
+            .then(clearForm())
+        ;
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Exam Added', life: 3000 });
 
     }
+    const header = (
+        <div className="table-header">
+            <h5 className="p-m-0">Search Test</h5>
+            <span className="p-input-icon-left">
+                <i className="pi pi-search" />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
+            </span>
+        </div>
+    );
     return(
         <div>
+            <Toast ref={toast} />
             <Menu id = "navbar" model={items} />
-            {/*<form onSubmit={}>*/}
                 <div id = "layout-portlets-cover">
                     <div className="card">
                         <div className="p-field p-grid">
@@ -72,8 +95,21 @@ export default function test() {
                         </div>
 
                     </div>
+
+                    <div className="card">
+                        <DataTable value={products}
+                                   globalFilter={globalFilter}
+                                   header={header}
+                                   paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
+                                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                                   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                        >
+                            <Column field="subject" header="Subject" sortable></Column>
+                            <Column field="examiner" header="Examiner" sortable></Column>
+                            <Column field="date" header="Date" sortable></Column>
+                        </DataTable>
+                    </div>
                 </div>
-            {/*</form>*/}
         </div>
     )
 }
