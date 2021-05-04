@@ -6,7 +6,7 @@ import ApplicationForm from "../../modules/registration/application_form";
 
 
 const axios = require('axios')
-const student_application_api_address = "http://localhost:3001/student_application"
+const student_application_api_address = "http://localhost:8080/student-applications"
 
 export default function DraftApplication() {
     const [applicationId, setApplicationId] = useState("");

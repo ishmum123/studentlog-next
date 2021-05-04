@@ -2,7 +2,7 @@ import styles from '../../styles/Home.module.css'
 import Head from "next/head";
 import Link from "next/link";
 
-const student_application_api_address = "http://localhost:3001/student_application"
+const student_application_api_address = "http://localhost:8080/student-applications"
 
 export async function getStaticProps({ params }) {
     const res = await fetch(student_application_api_address)
@@ -59,8 +59,8 @@ export default function AllApplications({applications, notFound}) {
                     {applications.map(a => <li key={a.id}>
                         <Link href={"/registration/application/"+a.id}>
                             <a> Name: {a.name} <br/>
-                                Registration ID: {a.registration_id} <br/>
-                                Application Date: {String(a.applied_date).split(/[\sT]+/)[0]} <br/>
+                                Registration ID: {a.registrationId} <br/>
+                                Application Date: {String(a.appliedDate).split(/[\sT]+/)[0]} <br/>
                                 Status: {a.status}
                             </a>
                         </Link>

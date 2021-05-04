@@ -5,7 +5,18 @@ import Link from "next/link";
 import {useRouter} from "next/router";
 
 const axios = require('axios')
-const student_application_api_address = "http://localhost:3001/student_application"
+const student_application_api_address = "http://localhost:8080/student-applications"
+
+
+const clean = (obj) => {
+    const propNames = Object.getOwnPropertyNames(obj);
+    for (let i = 0; i < propNames.length; i++) {
+        let propName = propNames[i];
+        if (!obj[propName]) {
+            delete obj[propName];
+        }
+    }
+}
 
 
 export default function ApplicationForm(props){
@@ -31,20 +42,20 @@ export default function ApplicationForm(props){
             return
         }
         setName(retrievedData.name ? String(retrievedData.name) : "");
-        setDateOfBirth(retrievedData.date_of_birth ?
-            String(retrievedData.date_of_birth).split(" ")[0] : "");
-        setBloodGroup(retrievedData.blood_group ? String(retrievedData.blood_group) : "");
-        setBirthRegistrationId(retrievedData.birth_registration_id ?
-            String(retrievedData.birth_registration_id) : "");
-        setRegistrationId(retrievedData.registration_id ? String(retrievedData.registration_id) : "");
-        setPresentAddress(retrievedData.present_address ? String(retrievedData.present_address) : "");
-        setPermanentAddress(retrievedData.permanent_address ?
-            String(retrievedData.permanent_address) : "");
-        setGuardianName(retrievedData.guardian_name ? String(retrievedData.guardian_name) : "");
-        setGuardianEmail(retrievedData.guardian_email ? String(retrievedData.guardian_email) : "");
-        setGuardianPhone(retrievedData.guardian_phone ? String(retrievedData.guardian_phone) : "");
-        setAppliedForGrade(retrievedData.applied_for_grade ?
-            String(retrievedData.applied_for_grade) : "");
+        setDateOfBirth(retrievedData.dateOfBirth ?
+            String(retrievedData.dateOfBirth).split('T')[0] : "");
+        setBloodGroup(retrievedData.bloodGroup ? String(retrievedData.bloodGroup) : "");
+        setBirthRegistrationId(retrievedData.birthRegistrationId ?
+            String(retrievedData.birthRegistrationId) : "");
+        setRegistrationId(retrievedData.registrationId ? String(retrievedData.registrationId) : "");
+        setPresentAddress(retrievedData.presentAddress ? String(retrievedData.presentAddress) : "");
+        setPermanentAddress(retrievedData.permanentAddress ?
+            String(retrievedData.permanentAddress) : "");
+        setGuardianName(retrievedData.guardianName ? String(retrievedData.guardianName) : "");
+        setGuardianEmail(retrievedData.guardianEmail ? String(retrievedData.guardianEmail) : "");
+        setGuardianPhone(retrievedData.guardianPhone ? String(retrievedData.guardianPhone) : "");
+        setAppliedForGrade(retrievedData.appliedForGrade ?
+            String(retrievedData.appliedForGrade) : "");
 
     }, [retrievedData]);
 
@@ -78,30 +89,31 @@ export default function ApplicationForm(props){
             alert("Error. Application ID: " + applicationId);
             router.push("/registration");
         }
-        const application_body = {
+        let application_body = {
             id: applicationId,
-            applied_date: getDate(),
-            decision_by_id: null,
+            appliedDate: getDate(),
+            decidedById: null,
             name: name,
-            date_of_birth: dateOfBirth + " 06:00:01",
-            blood_group: bloodGroup,
-            birth_registration_id: birthRegistrationId,
-            registration_id: registrationId,
-            present_address: presentAddress,
-            permanent_address: permanentAddress,
-            guardian_name: guardianName,
-            guardian_email: guardianEmail,
-            guardian_phone: guardianPhone,
-            applied_for_grade: appliedForGrade,
+            dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+            bloodGroup: bloodGroup,
+            birthRegistrationId: birthRegistrationId,
+            registrationId: registrationId,
+            presentAddress: presentAddress,
+            permanentAddress: permanentAddress,
+            guardianName: guardianName,
+            guardianEmail: guardianEmail,
+            guardianPhone: guardianPhone,
+            appliedForGrade: appliedForGrade,
             status: status
         };
+        clean(application_body)
         console.log(application_body);
 
         axios.patch(student_application_api_address+"/"+applicationId, application_body).then(resp => {
             console.log(resp.data);
             if(status === "draft"){
                 alert("Draft saved. Application ID: " + applicationId)
-                router.push("/registration");
+                // router.push("/registration");
             }
             else if(status === "submitted"){
                 alert("Application Submitted.")
@@ -162,10 +174,10 @@ export default function ApplicationForm(props){
                 <input
                     value={dateOfBirth}
                     id="date_of_birth"
-                    type="text"
+                    type="date"
                     onChange={event => setDateOfBirth(event.target.value)} />
                 {(dateOfBirth && !isValidDateOfBirth) && <p style={{color: 'red'}}>
-                    Date must be in yyyy-mm-dd format</p>}
+                    Date must be in appropriate format</p>}
             </div>
 
             <div>

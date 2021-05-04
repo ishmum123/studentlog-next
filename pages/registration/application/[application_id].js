@@ -5,7 +5,12 @@ import Link from "next/link";
 import {useRouter} from "next/router";
 
 const axios = require('axios')
-const student_application_api_address = "http://localhost:3001/student_application"
+const student_application_api_address = "http://localhost:8080/student-applications"
+
+const getDecidedById = () => {
+    //TODO: get admin/teacher id from context
+    return 1;
+}
 
 export async function getStaticPaths() {
     const res = await fetch(student_application_api_address)
@@ -69,7 +74,7 @@ export default function StudentApplication({application}) {
            return;
         }
 
-        const changedApplication = {...application, status : decision}
+        const changedApplication = {...application, decidedById: getDecidedById(), status : decision}
         axios.patch(student_application_api_address+"/"+application.id, changedApplication).then(resp => {
             console.log(resp.data);
             alert("Saved Successfully");
@@ -109,19 +114,19 @@ export default function StudentApplication({application}) {
                 <hr/>
 
                 <div>
-                    Applied Date: {application.applied_date} <br/>
-                    Decision by ID: {application.decision_by_id} <br/>
+                    Applied Date: {String(application.appliedDate).split('T')[0]} <br/>
+                    Decided by ID: {application.decidedById} <br/>
                     Name : {application.name} <br/>
-                    Date of Birth: {application.date_of_birth.toString().split(" ")[0]} <br/>
-                    Blood Group: {application.blood_group} <br/>
-                    Birth Registration ID: {application.birth_registration_id} <br/>
-                    Registration ID: {application.registration_id} <br/>
-                    Present Address: {application.present_address} <br/>
-                    Permanent Address: {application.permanent_address} <br/>
-                    Guardian Name: {application.guardian_name} <br/>
-                    Guardian Email: {application.guardian_email} <br/>
-                    Guardian Phone: {application.guardian_phone} <br/>
-                    Applied for Grade: {application.applied_for_grade} <br/>
+                    Date of Birth: {String(application.dateOfBirth).split('T')[0]} <br/>
+                    Blood Group: {application.bloodGroup} <br/>
+                    Birth Registration ID: {application.birthRegistrationId} <br/>
+                    Registration ID: {application.registrationId} <br/>
+                    Present Address: {application.presentAddress} <br/>
+                    Permanent Address: {application.permanentAddress} <br/>
+                    Guardian Name: {application.guardianName} <br/>
+                    Guardian Email: {application.guardianEmail} <br/>
+                    Guardian Phone: {application.guardianPhone} <br/>
+                    Applied for Grade: {application.appliedForGrade} <br/>
                     status: {application.status}
                 </div>
                 <hr/>

@@ -6,14 +6,18 @@ import ApplicationForm from "../../modules/registration/application_form";
 
 
 const axios = require('axios')
-const student_application_api_address = "http://localhost:3001/student_application"
+const student_application_api_address = "http://localhost:8080/student-applications"
 
 export default function NewApplication() {
     const [applicationId, setApplicationId] = useState(null);
 
     useEffect(() => { // side effect hook
         //generating a blank form for getting a unique id for saving as draft
-        axios.post(student_application_api_address, ).then(resp => {
+        const application_body = {
+            appliedDate: new Date(),
+            status: "draft"
+        };
+        axios.post(student_application_api_address, application_body).then(resp => {
             console.log(resp.data);
             setApplicationId(resp.data.id);
         }).catch(error => {
