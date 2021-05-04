@@ -13,13 +13,26 @@ export default function RegistrationHome() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to Student Registration Home
+         Student Registration Home
         </h1>
 
         <h2>
-          <Link href ="/registration/new-application">
+            <p><Link href ="/registration/new-application">
             <a style={{color: "blue"}}>New Student Application</a>
-          </Link>
+            </Link></p>
+
+            <p><Link href ="/registration/draft-application">
+                <a style={{color: "blue"}}>Retrieve Draft Student Application</a>
+            </Link></p>
+
+            <p><Link href ="/registration/pending-applications">
+                <a style={{color: "blue"}}>View Pending Applications</a>
+            </Link></p>
+
+            <p><Link href ="/registration/all-applications">
+              <a style={{color: "blue"}}>View All Applications</a>
+            </Link></p>
+
         </h2>
 
       </main>
