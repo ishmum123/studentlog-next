@@ -50,7 +50,6 @@ export default function NewApplication() {
             }).catch(error => {
             console.log(error);
         });
-
     }
 
     const handleFileUpload = event => {
