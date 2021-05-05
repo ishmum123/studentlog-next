@@ -3,6 +3,7 @@ import styles from '../../styles/Home.module.css'
 import Head from "next/head";
 import Link from "next/link";
 import ApplicationForm from "../../modules/registration/application_form";
+import Layout from "../../modules/shared/layout";
 
 
 const axios = require('axios')
@@ -31,38 +32,41 @@ export default function NewApplication() {
     }
 
     return (
-        <div >
-            <Head>
-                <title>New Student Registration</title>
-                <link rel="icon" href="../../public/favicon.ico"/>
-            </Head>
+      <Layout>
+          <div >
+              <Head>
+                  <title>New Student Registration</title>
+                  <link rel="icon" href="../../public/favicon.ico"/>
+              </Head>
 
-            <main >
-                <h1 className={styles.title}>
-                    Student Application Form
-                </h1>
+              <main >
+                  <h1 className={styles.title}>
+                      Student Application Form
+                  </h1>
 
-                <hr/>
+                  <hr/>
 
-                <div>
-                    <p><Link href ="/">
-                        <a style={{color: "blue"}}>Home Page</a>
-                    </Link></p>
+                  <div>
+                      <p><Link href ="/">
+                          <a style={{color: "blue"}}>Home Page</a>
+                      </Link></p>
 
-                    <p><Link href ="/registration">
-                        <a style={{color: "blue"}}>Registration Home Page</a>
-                    </Link></p>
-                </div>
+                      <p><Link href ="/registration">
+                          <a style={{color: "blue"}}>Registration Home Page</a>
+                      </Link></p>
+                  </div>
 
-                <hr/>
+                  <hr/>
 
-                <ApplicationForm applicationId={applicationId}
-                                 retrievedData={null}/>
+                  <ApplicationForm applicationId={applicationId}
+                                   retrievedData={null}/>
 
-            </main>
+              </main>
 
-            <footer className={styles.footer}>
-            </footer>
-        </div>
+              <footer className={styles.footer}>
+              </footer>
+          </div>
+      </Layout>
+
     );
 }

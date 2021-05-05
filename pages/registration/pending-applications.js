@@ -1,6 +1,7 @@
 import styles from '../../styles/Home.module.css'
 import Head from "next/head";
 import Link from "next/link";
+import Layout from "../../modules/shared/layout";
 
 const student_application_api_address = "http://localhost:8080/student-applications"
 
@@ -32,47 +33,50 @@ export default function PendingApplications({pendingApplications, notFound}) {
     }
 
     return (
-        <div >
-            <Head>
-                <title>Pending Student Applications</title>
-                <link rel="icon" href="../../public/favicon.ico"/>
-            </Head>
+      <Layout>
+          <div >
+              <Head>
+                  <title>Pending Student Applications</title>
+                  <link rel="icon" href="../../public/favicon.ico"/>
+              </Head>
 
-            <main >
-                <h1 className={styles.title}>
-                    Pending Student Applications
-                </h1>
+              <main >
+                  <h1 className={styles.title}>
+                      Pending Student Applications
+                  </h1>
 
-                <hr/>
+                  <hr/>
 
-                <div>
-                    <p><Link href ="/">
-                        <a style={{color: "blue"}}>Home Page</a>
-                    </Link></p>
+                  <div>
+                      <p><Link href ="/">
+                          <a style={{color: "blue"}}>Home Page</a>
+                      </Link></p>
 
-                    <p><Link href ="/registration">
-                        <a style={{color: "blue"}}>Registration Home Page</a>
-                    </Link></p>
-                </div>
+                      <p><Link href ="/registration">
+                          <a style={{color: "blue"}}>Registration Home Page</a>
+                      </Link></p>
+                  </div>
 
-                <hr/>
+                  <hr/>
 
-                {pendingApplications && <ol>
-                    {pendingApplications.map(a => <li key={a.id}>
-                        <Link href={"/registration/application/"+a.id}>
-                            <a> Name: {a.name} <br/>
-                                Registration ID: {a.registrationId} <br/>
-                                Application Date: {String(a.appliedDate).split(/[\sT]+/)[0]} <br/>
-                                Status: {a.status}
-                            </a>
-                        </Link>
-                    </li>)}
-                </ol>}
+                  {pendingApplications && <ol>
+                      {pendingApplications.map(a => <li key={a.id}>
+                          <Link href={"/registration/application/"+a.id}>
+                              <a> Name: {a.name} <br/>
+                                  Registration ID: {a.registrationId} <br/>
+                                  Application Date: {String(a.appliedDate).split(/[\sT]+/)[0]} <br/>
+                                  Status: {a.status}
+                              </a>
+                          </Link>
+                      </li>)}
+                  </ol>}
 
-            </main>
+              </main>
 
-            <footer className={styles.footer}>
-            </footer>
-        </div>
+              <footer className={styles.footer}>
+              </footer>
+          </div>
+      </Layout>
+
     );
 }
