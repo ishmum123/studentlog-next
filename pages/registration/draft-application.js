@@ -10,83 +10,83 @@ const axios = require('axios')
 const student_application_api_address = "http://localhost:8080/student-applications"
 
 export default function DraftApplication() {
-    const [applicationId, setApplicationId] = useState("");
-    const [applicationData, setApplicationData] = useState(null);
+  const [applicationId, setApplicationId] = useState("");
+  const [applicationData, setApplicationData] = useState(null);
 
-    const retrieveApplication = () => {
-        if(!applicationId){
-            return;
-        }
-        axios.get(student_application_api_address+"/"+applicationId, ).then(resp => {
-            if(resp.data.status !== "draft"){
-                alert("Application not draft with application ID: " + applicationId);
-                return;
-            }
-            console.log(resp.data);
-            setApplicationData(resp.data);
-
-        }).catch(error => {
-            alert("Application not found with application ID: " + applicationId);
-            console.log(error);
-        });
+  const retrieveApplication = () => {
+    if(!applicationId){
+      return;
     }
+    axios.get(student_application_api_address+"/"+applicationId, ).then(resp => {
+      if(resp.data.status !== "draft"){
+        alert("Application not draft with application ID: " + applicationId);
+        return;
+      }
+      console.log(resp.data);
+      setApplicationData(resp.data);
 
-    return (
-      <Layout>
-          <div >
-              <Head>
-                  <title>Student Registration</title>
-                  <link rel="icon" href="../../public/favicon.ico"/>
-              </Head>
+    }).catch(error => {
+      alert("Application not found with application ID: " + applicationId);
+      console.log(error);
+    });
+  }
 
-              <main >
-                  <h1 className={styles.title}>
-                      Student Application Form
-                  </h1>
+  return (
+    <Layout>
+      <div >
+        <Head>
+          <title>Student Registration</title>
+          <link rel="icon" href="../../public/favicon.ico"/>
+        </Head>
 
-                  <hr/>
+        <main >
+          <h1 className={styles.title}>
+            Student Application Form
+          </h1>
 
-                  <div>
-                      <p><Link href ="/">
-                          <a style={{color: "blue"}}>Home Page</a>
-                      </Link></p>
+          <hr/>
 
-                      <p><Link href ="/registration">
-                          <a style={{color: "blue"}}>Registration Home Page</a>
-                      </Link></p>
-                  </div>
+          <div>
+            <p><Link href ="/">
+              <a style={{color: "blue"}}>Home Page</a>
+            </Link></p>
 
-                  <hr/>
-                  <form id="searchForm" action="none">
-                      <div>
-                          <label htmlFor="id">Application id:</label>
-                          <input
-                            value={applicationId}
-                            id="id"
-                            type="text"
-                            disabled={applicationData}
-                            onChange={event => setApplicationId(event.target.value)}
-                          />
-                          <button
-                            type="button"
-                            disabled={applicationData}
-                            onClick={retrieveApplication}>
-                              Retrieve Application
-                          </button>
-                      </div>
-                  </form>
-
-                  <hr/>
-
-                  {applicationData && <ApplicationForm applicationId={applicationId}
-                                                       retrievedData={applicationData}/>}
-
-              </main>
-
-              <footer className={styles.footer}>
-              </footer>
+            <p><Link href ="/registration">
+              <a style={{color: "blue"}}>Registration Home Page</a>
+            </Link></p>
           </div>
-      </Layout>
 
-    );
+          <hr/>
+          <form id="searchForm" action="none">
+            <div>
+              <label htmlFor="id">Application id:</label>
+              <input
+                value={applicationId}
+                id="id"
+                type="text"
+                disabled={applicationData}
+                onChange={event => setApplicationId(event.target.value)}
+              />
+              <button
+                type="button"
+                disabled={applicationData}
+                onClick={retrieveApplication}>
+                Retrieve Application
+              </button>
+            </div>
+          </form>
+
+          <hr/>
+
+          {applicationData && <ApplicationForm applicationId={applicationId}
+                                               retrievedData={applicationData}/>}
+
+        </main>
+
+        <footer className={styles.footer}>
+        </footer>
+      </div>
+    </Layout>
+
+  );
 }
