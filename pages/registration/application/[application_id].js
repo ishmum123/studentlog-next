@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import styles from '../../../styles/Home.module.css'
 import Head from "next/head";
 import Link from "next/link";
@@ -8,6 +8,9 @@ import {Divider} from "primereact/divider";
 import {InputText} from "primereact/inputtext";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
+import Layout from "../../../modules/shared/layout";
+import {Toast} from "primereact/toast";
+import {confirmDialog} from "primereact/confirmdialog";
 
 const axios = require('axios')
 const student_application_api_address = "http://localhost:8080/student-applications"
@@ -57,6 +60,9 @@ export async function getStaticProps({ params }) {
 
 export default function StudentApplication({application}) {
   const router = useRouter();
+  const decisionToast = useRef(null);
+  const [buttonsDisabled, setButtonsDisabled] = useState(false);
+
   if (router.isFallback) {
     return <div>Loading...</div>
   }
@@ -66,21 +72,40 @@ export default function StudentApplication({application}) {
 
   }
 
-  const sendDecision = (e, decision) => {
-    e.preventDefault();
-    const confirmForm = confirm("Submit the decision?");
-    if (confirmForm) {
-      const changedApplication = {...application, decidedById: getDecidedById(), status : decision}
-      axios.patch(student_application_api_address+"/"+application.id, changedApplication).then(resp => {
-        alert("Saved Successfully");
-        router.reload();
-      }).catch(error => {
-        // console.log(error);
-        alert("Error occurred: \n"+ JSON.stringify(error))
-        router.reload();
+  const submitDecision = (decision) =>{
+    setButtonsDisabled(true);
 
-      });
+    const changedApplication = {...application, decidedById: getDecidedById(), status : decision}
+    axios.patch(student_application_api_address+"/"+application.id, changedApplication).then(resp => {
+      decisionToast.current.show({severity:'success', summary: "Application " + decision,
+        detail:'Application ' + application.id + ' ' + decision + ' Successfully', life: 3000});
+    }).catch(error => {
+      // console.log(error);
+      decisionToast.current.show({severity:'error', summary: 'Error Occurred',
+        detail:"Failed", life: 3000});
+    });
+  }
+
+  const confirmDecision = (msg, decision) => {
+    confirmDialog({
+      message: msg,
+      header: 'Confirmation',
+      icon: 'pi pi-save',
+      accept: () => submitDecision(decision)
+    });
+  }
+
+  const onDecisionClick = (e, decision) => {
+    e.preventDefault();
+    let msg = "";
+    if (decision === "approved"){
+      msg = "Approve application: " + application.id + "?";
     }
+    else if(decision === "rejected"){
+      msg = "Reject application: " + application.id + "?";
+
+    }
+    confirmDecision(msg, decision);
   }
 
   const convertObject = (obj) => {
@@ -107,72 +132,80 @@ export default function StudentApplication({application}) {
   const tableFormattedData = convertObject(application)
 
   return (
-    <div >
-      <Head>
-        <title>Student Applications Details</title>
-        <link rel="icon" href="../../../public/favicon.ico"/>
-      </Head>
+    <Layout>
+      <div >
+        <Head>
+          <title>Student Applications Details</title>
+          <link rel="icon" href="../../../public/favicon.ico"/>
+        </Head>
 
-      <main >
-        <h1 className={styles.title}>
-          Student Applications Details
-        </h1>
+        <main >
+          <Toast  id="decision_toast"
+                  ref={decisionToast}
+                  position="top-right"
+                  onHide={() => router.reload()}
+          />
+          <h1 className={styles.title}>
+            Student Applications Details
+          </h1>
 
-        <Divider />
+          <Divider />
 
-        <div className="card">
-          <p><Button className="p-button-link">
-            <Link href ="/">
-              <a>Home Page</a>
-            </Link>
-          </Button></p>
+          <div className="card">
+            <p><Button className="p-button-link">
+              <Link href ="/">
+                <a>Home Page</a>
+              </Link>
+            </Button></p>
 
-          <p><Button className="p-button-link">
-            <Link href ="/registration">
-              <a>Registration Home Page</a>
-            </Link>
-          </Button></p>
-        </div>
+            <p><Button className="p-button-link">
+              <Link href ="/registration">
+                <a>Registration Home Page</a>
+              </Link>
+            </Button></p>
+          </div>
 
-        <Divider />
+          <Divider />
 
-        <div className="card">
-          <DataTable
-            value={tableFormattedData}>
-            <Column field="field" header="Registration ID"/>
-            <Column field="value" header="Name"/>
-          </DataTable>
-        </div>
+          <div className="card">
+            <DataTable
+              value={tableFormattedData}>
+              <Column field="field" header="Registration ID"/>
+              <Column field="value" header="Name"/>
+            </DataTable>
+          </div>
 
-        <Divider />
+          <Divider />
 
-        <div style={{ margin: "auto", marginBottom: "1em" }}>
+          <div style={{ margin: "auto", marginBottom: "1em" }}>
 
-          <form id="decisionForm">
-            <Button
-              disabled={application.status !== "submitted"}
-              onClick={(e) => sendDecision(e, "approved")}
-              icon="pi pi-check"
-              className="p-button-success p-mr-2"
-              style={{width:'220px'}}
-              label="Approve Application"/>
+            <form id="decisionForm">
+              <Button
+                disabled={application.status !== "submitted" || buttonsDisabled}
+                onClick={(e) => onDecisionClick(e, "approved")}
+                icon="pi pi-check"
+                className="p-button-success p-mr-2"
+                style={{width:'220px'}}
+                label="Approve Application"/>
 
-            <Button
-              disabled={application.status !== "submitted"}
-              type="button"
-              className="p-button-danger p-mr-2"
-              onClick={(e) => sendDecision(e, "rejected")}
-              icon="pi pi-times"
-              style={{width:'220px'}}
-              label="Reject Application"/>
-          </form>
+              <Button
+                disabled={application.status !== "submitted" || buttonsDisabled}
+                type="button"
+                className="p-button-danger p-mr-2"
+                onClick={(e) => onDecisionClick(e, "rejected")}
+                icon="pi pi-times"
+                style={{width:'220px'}}
+                label="Reject Application"/>
+            </form>
 
-        </div>
+          </div>
 
-      </main>
+        </main>
 
-      <footer className={styles.footer}>
-      </footer>
-    </div>
+        <footer className={styles.footer}>
+        </footer>
+      </div>
+    </Layout>
+
   );
 }

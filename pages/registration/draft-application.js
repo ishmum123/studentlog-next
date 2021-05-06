@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import styles from '../../styles/Home.module.css'
 import Head from "next/head";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import {Button} from "primereact/button";
 import {Divider} from "primereact/divider";
 import {InputText} from "primereact/inputtext";
 import 'primeflex/primeflex.css';
+import {Toast} from "primereact/toast";
 
 const axios = require('axios')
 const student_application_api_address = "http://localhost:8080/student-applications"
@@ -16,6 +17,8 @@ export default function DraftApplication() {
   const [applicationId, setApplicationId] = useState("");
   const [applicationData, setApplicationData] = useState(null);
 
+  const draftToast = useRef(null);
+
   const retrieveApplication = (e) => {
     e.preventDefault();
     if(!applicationId){
@@ -23,13 +26,15 @@ export default function DraftApplication() {
     }
     axios.get(student_application_api_address+"/"+applicationId, ).then(resp => {
       if(resp.data.status !== "draft"){
-        alert("Application not draft with application ID: " + applicationId);
+        draftToast.current.show({severity:'error', summary: 'Not Found',
+          detail:"Application not draft with ID: " + applicationId, life: 3000});
         return;
       }
       setApplicationData(resp.data);
 
     }).catch(error => {
-      alert("Application not found with application ID: " + applicationId);
+      draftToast.current.show({severity:'error', summary: 'Not Found',
+        detail:"Application not found with ID: " + applicationId, life: 3000});
       // console.log(error);
     });
   }
@@ -43,6 +48,10 @@ export default function DraftApplication() {
         </Head>
 
         <main >
+          <Toast  id="draft_toast"
+                  ref={draftToast}
+                  position="top-right"
+          />
           <h1 className={styles.title}>
             Student Application Form
           </h1>

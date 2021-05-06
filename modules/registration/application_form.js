@@ -27,9 +27,6 @@ export default function ApplicationForm(props){
   const router = useRouter();
 
   const applicationToast = useRef(null);
-  const draftToast = useRef(null);
-  const submitToast = useRef(null);
-  const errorToast = useRef(null);
 
   const applicationId = props.applicationId;
   const retrievedData = props.retrievedData
@@ -180,7 +177,7 @@ export default function ApplicationForm(props){
               id="id"
               type="text"
               style={{width:'300px'}}
-              disabled={true}
+              disabled
             />
             <small id="id-help" className="p-d-block">
               Please keep this ID for retrieval.
