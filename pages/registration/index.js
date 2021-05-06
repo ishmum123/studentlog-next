@@ -3,6 +3,9 @@ import Link from 'next/link'
 import styles from '../../styles/Home.module.css'
 import Layout from "../../modules/shared/layout";
 
+import { Button } from 'primereact/button';
+// import './ButtonDemo.css';
+
 //TODO: create registration home page
 export default function RegistrationHome() {
   return (
@@ -19,21 +22,37 @@ export default function RegistrationHome() {
           </h1>
 
           <h2>
-            <p><Link href ="/registration/new-application">
-              <a style={{color: "blue"}}>New Student Application</a>
-            </Link></p>
+            <p style={{textAlign: "center"}}>
+              <Button className="p-button-link">
+                <Link href ="/registration/new-application">
+                  <a >New Student Application</a>
+                </Link>
+              </Button>
+            </p>
 
-            <p><Link href ="/registration/draft-application">
-              <a style={{color: "blue"}}>Retrieve Draft Student Application</a>
-            </Link></p>
+            <p style={{textAlign: "center"}}>
+              <Button className="p-button-link">
+                <Link href ="/registration/draft-application">
+                  <a>Retrieve Draft Student Application</a>
+                </Link>
+              </Button>
+            </p>
 
-            <p><Link href ="/registration/pending-applications">
-              <a style={{color: "blue"}}>View Pending Applications</a>
-            </Link></p>
+            <p style={{textAlign: "center"}}>
+              <Button className="p-button-link">
+                <Link href ="/registration/pending-applications">
+                  <a>View Pending Applications</a>
+                </Link>
+              </Button>
+            </p>
 
-            <p><Link href ="/registration/all-applications">
-              <a style={{color: "blue"}}>View All Applications</a>
-            </Link></p>
+            <p style={{textAlign: "center"}}>
+              <Button className="p-button-link">
+                <Link href ="/registration/all-applications">
+                  <a>View All Applications</a>
+                </Link>
+              </Button>
+            </p>
 
           </h2>
 

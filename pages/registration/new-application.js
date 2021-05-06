@@ -4,6 +4,8 @@ import Head from "next/head";
 import Link from "next/link";
 import ApplicationForm from "../../modules/registration/application_form";
 import Layout from "../../modules/shared/layout";
+import {Button} from "primereact/button";
+import {Divider} from "primereact/divider";
 
 
 const axios = require('axios')
@@ -19,10 +21,9 @@ export default function NewApplication() {
       status: "draft"
     };
     axios.post(student_application_api_address, application_body).then(resp => {
-      console.log(resp.data);
       setApplicationId(resp.data.id);
     }).catch(error => {
-      console.log(error);
+      // console.log(error);
     });
 
   }, []);
@@ -44,19 +45,23 @@ export default function NewApplication() {
             Student Application Form
           </h1>
 
-          <hr/>
+          <Divider />
 
-          <div>
-            <p><Link href ="/">
-              <a style={{color: "blue"}}>Home Page</a>
-            </Link></p>
+          <div className="card">
+            <p><Button className="p-button-link">
+              <Link href ="/">
+                <a>Home Page</a>
+              </Link>
+            </Button></p>
 
-            <p><Link href ="/registration">
-              <a style={{color: "blue"}}>Registration Home Page</a>
-            </Link></p>
+            <p><Button className="p-button-link">
+              <Link href ="/registration">
+                <a>Registration Home Page</a>
+              </Link>
+            </Button></p>
           </div>
 
-          <hr/>
+          <Divider />
 
           <ApplicationForm applicationId={applicationId}
                            retrievedData={null}/>

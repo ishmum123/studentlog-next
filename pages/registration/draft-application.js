@@ -1,10 +1,13 @@
-import {useEffect, useState} from "react";
+import React, {useState} from "react";
 import styles from '../../styles/Home.module.css'
 import Head from "next/head";
 import Link from "next/link";
 import ApplicationForm from "../../modules/registration/application_form";
 import Layout from "../../modules/shared/layout";
-
+import {Button} from "primereact/button";
+import {Divider} from "primereact/divider";
+import {InputText} from "primereact/inputtext";
+import 'primeflex/primeflex.css';
 
 const axios = require('axios')
 const student_application_api_address = "http://localhost:8080/student-applications"
@@ -13,7 +16,8 @@ export default function DraftApplication() {
   const [applicationId, setApplicationId] = useState("");
   const [applicationData, setApplicationData] = useState(null);
 
-  const retrieveApplication = () => {
+  const retrieveApplication = (e) => {
+    e.preventDefault();
     if(!applicationId){
       return;
     }
@@ -22,12 +26,11 @@ export default function DraftApplication() {
         alert("Application not draft with application ID: " + applicationId);
         return;
       }
-      console.log(resp.data);
       setApplicationData(resp.data);
 
     }).catch(error => {
       alert("Application not found with application ID: " + applicationId);
-      console.log(error);
+      // console.log(error);
     });
   }
 
@@ -44,39 +47,49 @@ export default function DraftApplication() {
             Student Application Form
           </h1>
 
-          <hr/>
+          <Divider />
 
-          <div>
-            <p><Link href ="/">
-              <a style={{color: "blue"}}>Home Page</a>
-            </Link></p>
+          <div className="card">
+            <p><Button className="p-button-link">
+              <Link href ="/">
+                <a>Home Page</a>
+              </Link>
+            </Button></p>
 
-            <p><Link href ="/registration">
-              <a style={{color: "blue"}}>Registration Home Page</a>
-            </Link></p>
+            <p><Button className="p-button-link">
+              <Link href ="/registration">
+                <a>Registration Home Page</a>
+              </Link>
+            </Button></p>
           </div>
 
-          <hr/>
+          <Divider />
+
+
+
           <form id="searchForm" action="none">
-            <div>
-              <label htmlFor="id">Application id:</label>
-              <input
-                value={applicationId}
-                id="id"
-                type="text"
-                disabled={applicationData}
-                onChange={event => setApplicationId(event.target.value)}
+            <h3 style={{ "margin": "auto", "marginLeft": "8px" }}>Retrieve draft application</h3>
+            <div className="p-col">
+                <span className="p-input-icon-left" style={{ margin: "auto", marginRight: "1em" }}>
+                  <i className="pi pi-search"/>
+                  <InputText
+                    value={applicationId}
+                    id="id"
+                    placeholder="Application ID"
+                    type="text"
+                    style={{width:'300px'}}
+                    disabled={applicationData}
+                    onChange={event => setApplicationId(event.target.value)} />
+                </span>
+              <Button icon="pi pi-search"
+                      className="p-button-rounded p-button-success p-button-outlined"
+                      disabled={applicationData}
+                      onClick={e => retrieveApplication(e)}
               />
-              <button
-                type="button"
-                disabled={applicationData}
-                onClick={retrieveApplication}>
-                Retrieve Application
-              </button>
             </div>
           </form>
 
-          <hr/>
+          <Divider />
 
           {applicationData && <ApplicationForm applicationId={applicationId}
                                                retrievedData={applicationData}/>}

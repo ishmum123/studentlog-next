@@ -2,6 +2,9 @@ import styles from '../../styles/Home.module.css'
 import Head from "next/head";
 import Link from "next/link";
 import Layout from "../../modules/shared/layout";
+import ApplicationsTable from "../../modules/registration/application_table";
+import {Button} from "primereact/button";
+import {Divider} from "primereact/divider";
 
 const student_application_api_address = "http://localhost:8080/student-applications"
 
@@ -16,8 +19,6 @@ export async function getStaticProps({ params }) {
   }
 
   const pendingApplications = applications.filter(a => a.status === "submitted")
-  // console.log("applications:")
-  // console.log(applications);
 
   // Pass applications data to the page via props
   return {
@@ -28,9 +29,6 @@ export async function getStaticProps({ params }) {
 }
 
 export default function PendingApplications({pendingApplications, notFound}) {
-  if(notFound){
-    return <div> Unable to retrieve data </div>
-  }
 
   return (
     <Layout>
@@ -45,31 +43,26 @@ export default function PendingApplications({pendingApplications, notFound}) {
             Pending Student Applications
           </h1>
 
-          <hr/>
+          <Divider />
 
-          <div>
-            <p><Link href ="/">
-              <a style={{color: "blue"}}>Home Page</a>
-            </Link></p>
+          <div className="card">
+            <p><Button className="p-button-link">
+              <Link href ="/">
+                <a>Home Page</a>
+              </Link>
+            </Button></p>
 
-            <p><Link href ="/registration">
-              <a style={{color: "blue"}}>Registration Home Page</a>
-            </Link></p>
+            <p><Button className="p-button-link">
+              <Link href ="/registration">
+                <a>Registration Home Page</a>
+              </Link>
+            </Button></p>
           </div>
 
-          <hr/>
+          <Divider />
 
-          {pendingApplications && <ol>
-            {pendingApplications.map(a => <li key={a.id}>
-              <Link href={"/registration/application/"+a.id}>
-                <a> Name: {a.name} <br/>
-                  Registration ID: {a.registrationId} <br/>
-                  Application Date: {String(a.appliedDate).split(/[\sT]+/)[0]} <br/>
-                  Status: {a.status}
-                </a>
-              </Link>
-            </li>)}
-          </ol>}
+          <ApplicationsTable applications={pendingApplications}
+                             notFound={notFound}/>
 
         </main>
 
