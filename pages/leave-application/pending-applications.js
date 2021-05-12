@@ -10,7 +10,8 @@ import {Column} from "primereact/column";
 import {Button} from 'primereact/button';
 
 
-const leave_application_api_address = "http://localhost:3001/leave_application/"
+// const leave_application_api_address = "http://localhost:3001/leave_application/"
+const leave_application_api_address = "http://localhost:8080/leave-applications/"
 
 export default function PendingApplications() {
   const [leaveApplicationList, setLeaveApplicationList] = useState([]);
@@ -19,6 +20,7 @@ export default function PendingApplications() {
   useEffect(async () => {
     await axios.get(leave_application_api_address)
       .then(res => {
+        //TODO: get only the pending applications from the server side
         setLeaveApplicationList(res.data.filter(a => a.status === "pending"));
       })
       .catch(error => {
@@ -28,8 +30,9 @@ export default function PendingApplications() {
 
   const leaveApplicationApproveProcess = (e, decision, leaveApplication) => {
     e.preventDefault();
-    axios.put(leave_application_api_address + leaveApplication.id,
-      {...leaveApplication, status: decision, decisionBy: 1}) //TODO: replace decisionBy : 1 with appropriate id
+    axios.patch(leave_application_api_address + leaveApplication.id,
+      {...leaveApplication, status: decision, decisionById: 1})
+      //TODO: replace decisionBy : 1 with appropriate id, also make sure no one can modify levaeApplication.id
       .then(res => {
         setLeaveApplicationList(leaveApplicationList.filter(item => item.id !== leaveApplication.id));
       })
@@ -38,9 +41,7 @@ export default function PendingApplications() {
       })
   }
 
-
   const decisionButton = (rowData, column) => {
-    console.log(rowData, column)
     return (
       <div>
         <Button
@@ -61,9 +62,9 @@ export default function PendingApplications() {
     <div className="table-header">
       <h5 className="p-m-0">Search Applications</h5>
       <span className="p-input-icon-left">
-          <i className="pi pi-search"/>
-          <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..."/>
-        </span>
+        <i className="pi pi-search"/>
+        <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..."/>
+      </span>
     </div>
 
   return (

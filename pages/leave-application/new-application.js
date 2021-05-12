@@ -11,7 +11,8 @@ import {Button} from "primereact/button";
 import {Toast} from "primereact/toast";
 
 
-const leave_application_api_address = "http://localhost:3001/leave_application/";
+// const leave_application_api_address = "http://localhost:3001/leave_application/";
+const leave_application_api_address = "http://localhost:8080/leave-applications/";
 
 export default function NewApplication() {
   const [dateFrom, setDateFrom] = useState("");
@@ -45,9 +46,10 @@ export default function NewApplication() {
       dateFrom: dateFrom,
       dateTo: dateTo,
       applicationBody: applicationBody,
-      supportedDocument: supportedDocument,
-      decisionBy: null,
-      status: "pending"
+      supportedDocumentName: supportedDocument.name,
+      supportedDocumentType: supportedDocument.type,
+      supportedDocumentSize: supportedDocument.size,
+      supportedDocumentBase64: supportedDocument.base64
     };
     console.log(post_body);
 
@@ -91,7 +93,7 @@ export default function NewApplication() {
               <label htmlFor="date_from">Date From</label>
               <Calendar
                 monthNavigator
-                dateFormat="dd-mm-yyyy"
+                dateFormat="dd-mm-yy"
                 id="date_from"
                 value={dateFrom}
                 onChange={event => setDateFrom(event.target.value)}
@@ -102,7 +104,7 @@ export default function NewApplication() {
               <label htmlFor="date_to">Date To</label>
               <Calendar
                 monthNavigator
-                dateFormat="dd-mm-yyyy"
+                dateFormat="dd-mm-yy"
                 id="date_to"
                 value={dateTo}
                 onChange={event => setDateTo(event.target.value)}
