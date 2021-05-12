@@ -9,9 +9,16 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "i18next-http-backend": "^1.2.2",
     "next": "10.1.3",
+    "next-i18next": "^7.0.1",
+    "primeflex": "^2.0.0",
+    "primeicons": "^4.1.0",
+    "primereact": "^6.3.1",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-file-base64": "^1.0.3",
+    "react-transition-group": "^4.4.1"
   },
   "devDependencies": {
     "cypress": "^7.2.0"
