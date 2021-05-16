@@ -18,7 +18,11 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-file-base64": "^1.0.3",
-    "react-transition-group": "^4.4.1"
+    "react-transition-group": "^4.4.1",
+    "cookie": "^0.4.1",
+    "@react-keycloak/ssr": "^3.3.0",
+    "keycloak-js": "^11.0.2",
+    "react-rainbow-components": "^1.25.0"
   },
   "devDependencies": {
     "cypress": "^7.2.0"

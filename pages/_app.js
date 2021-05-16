@@ -5,8 +5,46 @@ import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+import cookie from "cookie";
+import App from "next/app"
+import {SSRKeycloakProvider, SSRCookies} from "@react-keycloak/ssr";
+
+const keycloakCfg = {
+  url: "http://localhost:8080/auth",
+  realm: "MyDemo",
+  clientId: "my-react-client",
+  onLoad: 'login-required'
+};
+
+function MyApp({Component, pageProps, cookies}) {
+  return (
+      <>
+
+        <SSRKeycloakProvider
+            keycloakConfig={keycloakCfg}
+            persistor={SSRCookies(cookies)}
+        >
+          <Component {...pageProps} />
+        </SSRKeycloakProvider>
+
+      </>
+  );
 }
 
-export default appWithTranslation(MyApp)
+function parseCookies(req) {
+  if (!req || !req.headers) {
+    return {};
+  }
+  return cookie.parse(req.headers.cookie || "");
+}
+
+MyApp.getInitialProps = async (context) => {
+  // Extract cookies from AppContext
+  const appProps = await App.getInitialProps(context)
+  return {
+    ...appProps,
+    cookies: parseCookies(context?.ctx?.req)
+  };
+};
+
+export default appWithTranslation(MyApp);
