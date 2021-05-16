@@ -2,16 +2,14 @@ import React, {useState, useRef} from "react";
 import styles from '../../styles/Home.module.css'
 import Head from "next/head";
 import axios from "axios";
-import Link from "next/link";
-import FileBase64 from 'react-file-base64';
 import Layout from "../../modules/shared/layout";
 import {InputTextarea} from 'primereact/inputtextarea';
 import {Calendar} from "primereact/calendar";
 import {Button} from "primereact/button";
 import {Toast} from "primereact/toast";
+import {FileUpload} from "primereact/fileupload";
 
 
-// const leave_application_api_address = "http://localhost:3001/leave_application/";
 const leave_application_api_address = "http://localhost:8080/leave-applications/";
 
 export default function NewApplication() {
@@ -46,12 +44,11 @@ export default function NewApplication() {
       dateFrom: dateFrom,
       dateTo: dateTo,
       applicationBody: applicationBody,
-      supportedDocumentName: supportedDocument.name,
-      supportedDocumentType: supportedDocument.type,
-      supportedDocumentSize: supportedDocument.size,
-      supportedDocumentBase64: supportedDocument.base64
+      supportedDocumentName: supportedDocument ? supportedDocument.name : "",
+      supportedDocumentType: supportedDocument ? supportedDocument.type : "",
+      supportedDocumentSize: supportedDocument ? supportedDocument.size : "",
+      supportedDocumentBase64: supportedDocument ? supportedDocument.base64 : ""
     };
-    console.log(post_body);
 
     axios.post(leave_application_api_address, post_body)
       .then(_ => {
@@ -66,9 +63,21 @@ export default function NewApplication() {
       .catch(error => console.log(error));
   }
 
-  const handleFileUpload = event => {
-    console.log(event);
-    setSupportedDocument(event);
+  const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+
+  const handleFileUpload = async event => {
+    let file = {
+      name: event.files[0].name,
+      type: event.files[0].type,
+      size: event.files[0].size,
+      base64: await toBase64(event.files[0])
+    }
+    setSupportedDocument(file);
   }
 
   return (
@@ -129,11 +138,17 @@ export default function NewApplication() {
             </div>
 
             <div>
-              <label htmlFor="supported_document">Supported Documents (if any): </label>
-              <FileBase64
-                ref={ref}
-                multiple={false}
-                onDone={handleFileUpload}/>
+              <label htmlFor="supported_document_1">Supported Documents (if any): </label>
+              <FileUpload
+                name='supported_document_1' //todo: change it to every student id
+                customUpload={true}
+                uploadHandler={handleFileUpload}
+                accept='text/*'
+                maxFileSize={1000000}
+                mode="basic"
+                auto
+              />
+
             </div>
 
             <Button

@@ -10,7 +10,6 @@ import {Column} from "primereact/column";
 import {Button} from 'primereact/button';
 
 
-// const leave_application_api_address = "http://localhost:3001/leave_application/"
 const leave_application_api_address = "http://localhost:8080/leave-applications/"
 
 export default function PendingApplications() {
@@ -22,7 +21,7 @@ export default function PendingApplications() {
       .then(res => {
         //TODO: get only the pending applications from the server side
         setLeaveApplicationList(res.data.filter(a => a.status === "pending"));
-      })
+        console.log(leaveApplicationList);})
       .catch(error => {
         console.log(error);
       })
