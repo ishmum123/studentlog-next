@@ -67,7 +67,7 @@ export default function PendingApplications() {
     </div>
 
   return (
-    <Layout>
+    <>
       <div>
         <Head>
           <title>Pending Leave Applications</title>
@@ -106,6 +106,6 @@ export default function PendingApplications() {
         <footer className={styles.footer}>
         </footer>
       </div>
-    </Layout>
+    </>
   );
 }

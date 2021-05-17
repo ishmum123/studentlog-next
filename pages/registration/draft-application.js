@@ -40,7 +40,7 @@ export default function DraftApplication() {
   }
 
   return (
-    <Layout>
+    <>
       <div >
         <Head>
           <title>Student Registration</title>
@@ -108,7 +108,7 @@ export default function DraftApplication() {
         <footer className={styles.footer}>
         </footer>
       </div>
-    </Layout>
+    </>
 
   );
 }

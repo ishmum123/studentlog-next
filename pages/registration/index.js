@@ -9,7 +9,7 @@ import { Button } from 'primereact/button';
 //TODO: create registration home page
 export default function RegistrationHome() {
   return (
-    <Layout>
+    <>
       <div className={styles.container}>
         <Head>
           <title>Student Registration</title>
@@ -61,7 +61,7 @@ export default function RegistrationHome() {
         <footer className={styles.footer}>
         </footer>
       </div>
-    </Layout>
+    </>
 
   )
 }

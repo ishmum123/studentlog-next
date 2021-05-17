@@ -132,7 +132,7 @@ export default function StudentApplication({application}) {
   const tableFormattedData = convertObject(application)
 
   return (
-    <Layout>
+    <>
       <div >
         <Head>
           <title>Student Applications Details</title>
@@ -205,7 +205,7 @@ export default function StudentApplication({application}) {
         <footer className={styles.footer}>
         </footer>
       </div>
-    </Layout>
+    </>
 
   );
 }

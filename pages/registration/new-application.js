@@ -33,7 +33,7 @@ export default function NewApplication() {
   }
 
   return (
-    <Layout>
+    <>
       <div >
         <Head>
           <title>New Student Registration</title>
@@ -71,7 +71,7 @@ export default function NewApplication() {
         <footer className={styles.footer}>
         </footer>
       </div>
-    </Layout>
+    </>
 
   );
 }

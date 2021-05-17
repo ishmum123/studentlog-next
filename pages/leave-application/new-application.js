@@ -81,7 +81,7 @@ export default function NewApplication() {
   }
 
   return (
-    <Layout>
+    <>
       <Toast ref={toast}/>
       <div>
         <Head>
@@ -163,6 +163,6 @@ export default function NewApplication() {
         <footer className={styles.footer}>
         </footer>
       </div>
-    </Layout>
+    </>
   );
 }

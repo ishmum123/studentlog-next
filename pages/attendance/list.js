@@ -74,7 +74,7 @@ const AttendanceHome = () => {
     </div>
 
   return (
-    <Layout>
+    <>
       <Toast ref={toast}/>
       <div className="card">
         <Toolbar className="p-mb-4" left={submitTemplate} right={datePickerTemplate}/>
@@ -94,7 +94,7 @@ const AttendanceHome = () => {
           <Column field="studentId" header="Student ID" sortable/>
         </DataTable>
       </div>
-    </Layout>
+    </>
   );
 }
 

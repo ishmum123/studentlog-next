@@ -21,7 +21,7 @@ const Visitor = () => {
             label="Login"
             onClick={createLogin}
             className="p-button-raised p-button-warning"
-            icon="pi pi-lock-open"
+            icon="pi pi-user"
           />
         </div>
       </div>

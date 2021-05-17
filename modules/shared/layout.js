@@ -4,7 +4,7 @@ import Visitor from "./visitor";
 
 const Layout = ({children}) => {
   const keycloak = useKeycloak();
-  const Component = keycloak.keycloak.authenticated ? Dashboard : Visitor;
+  const Component = !keycloak.keycloak.authenticated ? Dashboard : Visitor;
 
   return <Component>{children}</Component>;
 }

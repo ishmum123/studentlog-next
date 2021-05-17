@@ -2,5 +2,7 @@
   "welcomeMessage": "Hi, welcome!",
   "home": "Welcome",
   "about": "About us",
-  "description": "Description"
+  "description": "Description",
+  "logout": "Log Out",
+  "profile": "Profile"
 }

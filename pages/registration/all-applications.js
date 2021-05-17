@@ -29,7 +29,7 @@ export async function getStaticProps({ params }) {
 export default function AllApplications({applications, notFound}) {
 
   return (
-    <Layout>
+    <>
       <div >
         <Head>
           <title>All Student Applications</title>
@@ -67,7 +67,7 @@ export default function AllApplications({applications, notFound}) {
         <footer className={styles.footer}>
         </footer>
       </div>
-    </Layout>
+    </>
 
   );
 }

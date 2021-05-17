@@ -31,7 +31,7 @@ export async function getStaticProps({ params }) {
 export default function PendingApplications({pendingApplications, notFound}) {
 
   return (
-    <Layout>
+    <>
       <div >
         <Head>
           <title>Pending Student Applications</title>
@@ -69,7 +69,7 @@ export default function PendingApplications({pendingApplications, notFound}) {
         <footer className={styles.footer}>
         </footer>
       </div>
-    </Layout>
+    </>
 
   );
 }

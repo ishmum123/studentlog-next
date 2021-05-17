@@ -2,5 +2,7 @@
   "welcomeMessage": "স্বাগত বার্তা",
   "home": "বাড়ি",
   "about": "আমাদের সম্পর্কে",
-  "description": "বর্ণনা"
+  "description": "বর্ণনা",
+  "logout": "লগ আউট",
+  "profile": "প্রোফাইল"
 }
