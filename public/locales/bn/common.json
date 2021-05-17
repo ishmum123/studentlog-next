@@ -4,5 +4,10 @@
   "about": "আমাদের সম্পর্কে",
   "description": "বর্ণনা",
   "logout": "লগ আউট",
-  "profile": "প্রোফাইল"
+  "profile": "প্রোফাইল",
+  "students": "ছাত্র",
+  "attendance": "উপস্থিতি",
+  "new_leave_application": "নতুন ছুটির আবেদন",
+  "pending_leave_applications": "ছুটির আবেদনসমূহ",
+  "student_registration": "ছাত্র নিবন্ধন"
 }
