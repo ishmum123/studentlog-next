@@ -3,66 +3,75 @@ import styles from '../../styles/Home.module.css'
 import Head from "next/head";
 import Link from "next/link";
 import ApplicationForm from "../../modules/registration/application_form";
+import Layout from "../../modules/shared/layout";
+import {Button} from "primereact/button";
+import {Divider} from "primereact/divider";
 
 
 const axios = require('axios')
 const student_application_api_address = "http://localhost:8080/student-applications"
 
 export default function NewApplication() {
-    const [applicationId, setApplicationId] = useState(null);
+  const [applicationId, setApplicationId] = useState(null);
 
-    useEffect(() => { // side effect hook
-        //generating a blank form for getting a unique id for saving as draft
-        const application_body = {
-            appliedDate: new Date(),
-            status: "draft"
-        };
-        axios.post(student_application_api_address, application_body).then(resp => {
-            console.log(resp.data);
-            setApplicationId(resp.data.id);
-        }).catch(error => {
-            console.log(error);
-        });
+  useEffect(() => { // side effect hook
+    //generating a blank form for getting a unique id for saving as draft
+    const application_body = {
+      appliedDate: new Date(),
+      status: "draft"
+    };
+    axios.post(student_application_api_address, application_body).then(resp => {
+      setApplicationId(resp.data.id);
+    }).catch(error => {
+      // console.log(error);
+    });
 
-    }, []);
+  }, []);
 
-    if(!applicationId){
-        return <div>Loading...</div>
-    }
+  if(!applicationId){
+    return <div>Loading...</div>
+  }
 
-    return (
-        <div >
-            <Head>
-                <title>New Student Registration</title>
-                <link rel="icon" href="../../public/favicon.ico"/>
-            </Head>
+  return (
+    <Layout>
+      <div >
+        <Head>
+          <title>New Student Registration</title>
+          <link rel="icon" href="../../public/favicon.ico"/>
+        </Head>
 
-            <main >
-                <h1 className={styles.title}>
-                    Student Application Form
-                </h1>
+        <main >
+          <h1 className={styles.title}>
+            Student Application Form
+          </h1>
 
-                <hr/>
+          <Divider />
 
-                <div>
-                    <p><Link href ="/">
-                        <a style={{color: "blue"}}>Home Page</a>
-                    </Link></p>
+          <div className="card">
+            <p><Button className="p-button-link">
+              <Link href ="/">
+                <a>Home Page</a>
+              </Link>
+            </Button></p>
 
-                    <p><Link href ="/registration">
-                        <a style={{color: "blue"}}>Registration Home Page</a>
-                    </Link></p>
-                </div>
+            <p><Button className="p-button-link">
+              <Link href ="/registration">
+                <a>Registration Home Page</a>
+              </Link>
+            </Button></p>
+          </div>
 
-                <hr/>
+          <Divider />
 
-                <ApplicationForm applicationId={applicationId}
-                                 retrievedData={null}/>
+          <ApplicationForm applicationId={applicationId}
+                           retrievedData={null}/>
 
-            </main>
+        </main>
 
-            <footer className={styles.footer}>
-            </footer>
-        </div>
-    );
+        <footer className={styles.footer}>
+        </footer>
+      </div>
+    </Layout>
+
+  );
 }

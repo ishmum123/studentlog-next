@@ -7,6 +7,7 @@ const Layout = ({children}) => {
     {label: 'Attendance List', url: '/attendance/list'},
     {label: 'New Leave Application', url: '/leave-application/new-application'},
     {label: 'Pending Leave Applications', url: '/leave-application/pending-applications'},
+    {label: 'Student Registration', url: '/registration'}
   ]
 
   return (
