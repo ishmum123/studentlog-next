@@ -9,6 +9,7 @@ import 'primeflex/primeflex.css'
 import cookie from "cookie";
 import App from "next/app"
 import {SSRKeycloakProvider, SSRCookies} from "@react-keycloak/ssr";
+import Layout from "../modules/shared/layout";
 
 const keycloakCfg = {
   url: "http://localhost:8080/auth",
@@ -25,7 +26,9 @@ function MyApp({Component, pageProps, cookies}) {
             keycloakConfig={keycloakCfg}
             persistor={SSRCookies(cookies)}
         >
-          <Component {...pageProps} />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </SSRKeycloakProvider>
 
       </>

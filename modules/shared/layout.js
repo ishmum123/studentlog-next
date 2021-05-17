@@ -1,23 +1,12 @@
-import Link from 'next/link'
-import { Menu } from "primereact/menu";
+import {useKeycloak} from "@react-keycloak/ssr";
+import Dashboard from "./dashboard";
+import Visitor from "./visitor";
 
 const Layout = ({children}) => {
-  const items = [
-    {label: 'Student List', url: '/attendance/'},
-    {label: 'Attendance List', url: '/attendance/list'},
-    {label: 'New Leave Application', url: '/leave-application/new-application'},
-    {label: 'Pending Leave Applications', url: '/leave-application/pending-applications'},
-    {label: 'Student Registration', url: '/registration'}
-  ]
+  const keycloak = useKeycloak();
+  const Component = keycloak.keycloak.authenticated ? Dashboard : Visitor;
 
-  return (
-    <>
-      <Menu id="navbar" model={items}/>
-      <div style={{marginLeft: "200px", marginTop: "50px", marginRight: "40px"}}>
-        {children}
-      </div>
-    </>
-  );
+  return <Component>{children}</Component>;
 }
 
 export default Layout;
