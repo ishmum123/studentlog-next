@@ -5,6 +5,7 @@ const Layout = ({children}) => {
   const items = [
     {label: 'Student List', url: '/attendance/'},
     {label: 'Attendance List', url: '/attendance/list'},
+    {label: 'Student Registration', url: '/registration'}
   ]
 
   return (

@@ -1,298 +1,382 @@
-import {useEffect, useState} from "react";
-import Head from "next/head";
-import styles from "../../styles/Home.module.css";
-import Link from "next/link";
+import React, {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
+import {InputText} from "primereact/inputtext";
+import { Divider } from 'primereact/divider';
+import {Button} from "primereact/button";
+import { InputTextarea } from 'primereact/inputtextarea';
+import 'primeflex/primeflex.css';
+import {Calendar} from "primereact/calendar";
+import { confirmDialog } from 'primereact/confirmdialog';
+import { Toast } from 'primereact/toast';
 
 const axios = require('axios')
 const student_application_api_address = "http://localhost:8080/student-applications"
 
 
 const clean = (obj) => {
-    const propNames = Object.getOwnPropertyNames(obj);
-    for (let i = 0; i < propNames.length; i++) {
-        let propName = propNames[i];
-        if (!obj[propName]) {
-            delete obj[propName];
-        }
+  let cleanedObj = {};
+  Object.getOwnPropertyNames(obj).forEach(propName => {
+    if (obj[propName]) {
+      cleanedObj[propName] = obj[propName]
     }
+  })
+  return cleanedObj;
 }
 
-
 export default function ApplicationForm(props){
-    const router = useRouter();
+  const router = useRouter();
 
-    const applicationId = props.applicationId;
-    const retrievedData = props.retrievedData
+  const applicationToast = useRef(null);
 
-    const [name, setName] = useState("");
-    const [dateOfBirth, setDateOfBirth] = useState("");
-    const [bloodGroup, setBloodGroup] = useState("");
-    const [birthRegistrationId, setBirthRegistrationId] = useState("");
-    const [registrationId, setRegistrationId] = useState("");
-    const [presentAddress, setPresentAddress] = useState("");
-    const [permanentAddress, setPermanentAddress] = useState("");
-    const [guardianName, setGuardianName] = useState("");
-    const [guardianEmail, setGuardianEmail] = useState("");
-    const [guardianPhone, setGuardianPhone] = useState("");
-    const [appliedForGrade, setAppliedForGrade] = useState("");
+  const applicationId = props.applicationId;
+  const retrievedData = props.retrievedData
 
-    useEffect(() => { // side effect hook
-        if(!retrievedData){
-            return
-        }
-        setName(retrievedData.name ? String(retrievedData.name) : "");
-        setDateOfBirth(retrievedData.dateOfBirth ?
-            String(retrievedData.dateOfBirth).split('T')[0] : "");
-        setBloodGroup(retrievedData.bloodGroup ? String(retrievedData.bloodGroup) : "");
-        setBirthRegistrationId(retrievedData.birthRegistrationId ?
-            String(retrievedData.birthRegistrationId) : "");
-        setRegistrationId(retrievedData.registrationId ? String(retrievedData.registrationId) : "");
-        setPresentAddress(retrievedData.presentAddress ? String(retrievedData.presentAddress) : "");
-        setPermanentAddress(retrievedData.permanentAddress ?
-            String(retrievedData.permanentAddress) : "");
-        setGuardianName(retrievedData.guardianName ? String(retrievedData.guardianName) : "");
-        setGuardianEmail(retrievedData.guardianEmail ? String(retrievedData.guardianEmail) : "");
-        setGuardianPhone(retrievedData.guardianPhone ? String(retrievedData.guardianPhone) : "");
-        setAppliedForGrade(retrievedData.appliedForGrade ?
-            String(retrievedData.appliedForGrade) : "");
+  const [name, setName] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [bloodGroup, setBloodGroup] = useState("");
+  const [birthRegistrationId, setBirthRegistrationId] = useState("");
+  const [registrationId, setRegistrationId] = useState("");
+  const [presentAddress, setPresentAddress] = useState("");
+  const [permanentAddress, setPermanentAddress] = useState("");
+  const [guardianName, setGuardianName] = useState("");
+  const [guardianEmail, setGuardianEmail] = useState("");
+  const [guardianPhone, setGuardianPhone] = useState("");
+  const [appliedForGrade, setAppliedForGrade] = useState("");
 
-    }, [retrievedData]);
+  const [buttonsDisabled, setButtonsDisabled] = useState(false);
+  const [onHideAction, setOnHideAction] = useState("");
 
-    const isValidName = name.match(/^(\w| ){5,50}$/);
-    const isValidDateOfBirth = dateOfBirth.match(/^[\d]{4}-[\d]{2}-[\d]{2}$/);
-    const isValidBloodGroup = bloodGroup.match(/^(A|B|AB|O)[+-]$/);
-    const isValidBirthRegistrationId = birthRegistrationId.match(/^[\d]{8,20}$/);
-    const isValidRegistrationId = registrationId.match(/^[\d]{8,20}$/);
-    const isValidPresentAddress = presentAddress.match(/^(\w| ){5,100}$/);
-    const isValidPermanentAddress = permanentAddress.match(/^(\w| ){5,100}$/);
-    const isValidGuardianName = guardianName.match(/^(\w| ){5,100}$/);
-    const isValidGuardianEmail = true;
-    const isValidGuardianPhone = guardianPhone.match(/^(\+88)?01[0-9]{9}$/);
-    const isValidAppliedForGrade = appliedForGrade.match(/^([\d]|10)$/)
-
-    const isValidData = isValidName && isValidDateOfBirth && isValidBloodGroup && isValidBirthRegistrationId
-        && isValidRegistrationId && isValidPresentAddress && isValidPermanentAddress && isValidGuardianName
-        && isValidGuardianEmail && isValidGuardianPhone && isValidAppliedForGrade;
-
-    const getDate = () => {
-        //TODO: generate appropriate date format
-        let date = new Date();
-
-        console.log(date)
-        return date;
+  const onToastHide = () => {
+    if(onHideAction==="registration"){
+        router.push("/registration");
     }
-
-    const postStudentApplicationData = (status) => {
-        if(!applicationId){
-            console.log(applicationId)
-            alert("Error. Application ID: " + applicationId);
-            router.push("/registration");
-        }
-        let application_body = {
-            id: applicationId,
-            appliedDate: getDate(),
-            decidedById: null,
-            name: name,
-            dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
-            bloodGroup: bloodGroup,
-            birthRegistrationId: birthRegistrationId,
-            registrationId: registrationId,
-            presentAddress: presentAddress,
-            permanentAddress: permanentAddress,
-            guardianName: guardianName,
-            guardianEmail: guardianEmail,
-            guardianPhone: guardianPhone,
-            appliedForGrade: appliedForGrade,
-            status: status
-        };
-        clean(application_body)
-        console.log(application_body);
-
-        axios.patch(student_application_api_address+"/"+applicationId, application_body).then(resp => {
-            console.log(resp.data);
-            if(status === "draft"){
-                alert("Draft saved. Application ID: " + applicationId)
-                // router.push("/registration");
-            }
-            else if(status === "submitted"){
-                alert("Application Submitted.")
-                router.push("/registration/application/"+applicationId);
-            }
-        }).catch(error => {
-            console.log(error);
-            alert("Error occurred: \n"+ JSON.stringify(error))
-            router.push("/registration");
-        });
-
+    if(onHideAction==="application"){
+      router.push("/registration/application/"+applicationId);
     }
+  }
 
-    const saveStudentApplicationData = (e) =>{
-        e.preventDefault();
-
-        const confirmForm = confirm("Save the form?");
-        if (confirmForm) {
-            postStudentApplicationData("draft");
-        }
+  useEffect(() => { // side effect hook
+    if(retrievedData){
+      setName(retrievedData.name ? String(retrievedData.name) : "");
+      setDateOfBirth(retrievedData.dateOfBirth ? new Date(retrievedData.dateOfBirth): "");
+      setBloodGroup(retrievedData.bloodGroup ? String(retrievedData.bloodGroup) : "");
+      setBirthRegistrationId(retrievedData.birthRegistrationId ? String(retrievedData.birthRegistrationId) : "");
+      setRegistrationId(retrievedData.registrationId ? String(retrievedData.registrationId) : "");
+      setPresentAddress(retrievedData.presentAddress ? String(retrievedData.presentAddress) : "");
+      setPermanentAddress(retrievedData.permanentAddress ? String(retrievedData.permanentAddress) : "");
+      setGuardianName(retrievedData.guardianName ? String(retrievedData.guardianName) : "");
+      setGuardianEmail(retrievedData.guardianEmail ? String(retrievedData.guardianEmail) : "");
+      setGuardianPhone(retrievedData.guardianPhone ? String(retrievedData.guardianPhone) : "");
+      setAppliedForGrade(retrievedData.appliedForGrade ? String(retrievedData.appliedForGrade) : "");
     }
+  }, [retrievedData]);
 
-    const submitStudentApplicationData = (e) => {
-        e.preventDefault();
+  const isValidName = name.match(/^(\w| ){5,50}$/);
+  const isValidDateOfBirth = !isNaN(new Date(dateOfBirth).getTime());
+  const isValidBloodGroup = bloodGroup.match(/^(A|B|AB|O)[+-]$/);
+  const isValidBirthRegistrationId = birthRegistrationId.match(/^[\d]{8,20}$/);
+  const isValidRegistrationId = registrationId.match(/^[\d]{8,20}$/);
+  const isValidPresentAddress = presentAddress.match(/^(\w| ){5,100}$/);
+  const isValidPermanentAddress = permanentAddress.match(/^(\w| ){5,100}$/);
+  const isValidGuardianName = guardianName.match(/^(\w| ){5,100}$/);
+  const isValidGuardianEmail = true;
+  const isValidGuardianPhone = guardianPhone.match(/^(\+88)?01[0-9]{9}$/);
+  const isValidAppliedForGrade = appliedForGrade.match(/^([\d]|10)$/)
 
-        const confirmForm = confirm("Submit the form?");
-        if (confirmForm) {
-            postStudentApplicationData("submitted");
-        }
+  const isValidData = !!(isValidName && isValidDateOfBirth && isValidBloodGroup && isValidBirthRegistrationId
+    && isValidRegistrationId && isValidPresentAddress && isValidPermanentAddress && isValidGuardianName
+    && isValidGuardianEmail && isValidGuardianPhone && isValidAppliedForGrade);
+
+  const getDate = () => {
+    //TODO: generate appropriate date format
+    return new Date();
+  }
+
+  const postStudentApplicationData = (status) => {
+    if(!applicationId){
+      setButtonsDisabled(true);
+      setOnHideAction("registration");
+      applicationToast.current.show({severity:'error', summary: 'Error Occurred',
+        detail:"Application ID: " + applicationId, life: 3000});
     }
+    let application_body = {
+      id: applicationId,
+      appliedDate: getDate(),
+      decidedById: null,
+      name: name,
+      dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+      bloodGroup: bloodGroup,
+      birthRegistrationId: birthRegistrationId,
+      registrationId: registrationId,
+      presentAddress: presentAddress,
+      permanentAddress: permanentAddress,
+      guardianName: guardianName,
+      guardianEmail: guardianEmail,
+      guardianPhone: guardianPhone,
+      appliedForGrade: appliedForGrade,
+      status: status
+    };
+    const cleaned_application_body =  clean(application_body);
 
-    return (
-        <form id="applicationForm" action="none">
-            <div>
-                {/*TODO: use registration Id to retrieve when backend is integrated*/}
-                <label htmlFor="id">Application id:</label>
-                <input
-                    value={applicationId}
-                    id="id"
-                    type="text"
-                    disabled={true}
-                />
-                <span style={{color: "blue"}}>(Please keep this ID for retrieval)</span>
-            </div>
-            <div>
-                <label htmlFor="name">Student Name:</label>
-                <input
-                    value={name}
-                    id="name"
-                    type="text"
-                    onChange={event => setName(event.target.value)} />
-                {(name && !isValidName) && <p style={{color: 'red'}}>
-                    Name must be between 5 to 50 characters</p>}
-            </div>
+    axios.patch(student_application_api_address+"/"+applicationId, cleaned_application_body).then(resp => {
+      if(status === "draft"){
+        setOnHideAction("");
+        applicationToast.current.show({severity:'success', summary: 'Draft Saved Successfully',
+          detail:"Application ID: "+applicationId, life: 3000});
+      }
+      else if(status === "submitted"){
+        setButtonsDisabled(true);
+        setOnHideAction("application");
+        applicationToast.current.show({severity:'success', summary: 'Application Submitted Successfully',
+          detail:"Application ID: "+applicationId, life: 3000});
+      }
+    }).catch(error => {
+      // console.log(error);
+      setButtonsDisabled(true);
+      setOnHideAction("registration");
+      applicationToast.current.show({severity:'error', summary: 'Error Occurred',
+        detail:"Failed", life: 3000});
+    });
 
-            <div>
-                <label htmlFor="date_of_birth">Date of Birth:</label>
-                <input
-                    value={dateOfBirth}
-                    id="date_of_birth"
-                    type="date"
-                    onChange={event => setDateOfBirth(event.target.value)} />
-                {(dateOfBirth && !isValidDateOfBirth) && <p style={{color: 'red'}}>
-                    Date must be in appropriate format</p>}
-            </div>
+  }
 
-            <div>
-                <label htmlFor="blood_group">Blood Group:</label>
-                <input
-                    value={bloodGroup}
-                    id="blood_group"
-                    type="text"
-                    onChange={event => setBloodGroup(event.target.value)} />
-                {(bloodGroup && !isValidBloodGroup) && <p style={{color: 'red'}}>
-                    Invalid blood group</p>}
-            </div>
+  const confirmApplication = (msg, status) => {
+    confirmDialog({
+      message: msg,
+      header: 'Confirmation',
+      icon: 'pi pi-save',
+      accept: () => postStudentApplicationData(status)
+    });
+  }
 
-            <div>
-                <label htmlFor="birth_registration_id">Birth Registration ID:</label>
-                <input
-                    value={birthRegistrationId}
-                    id="birth_registration_id"
-                    type="text"
-                    onChange={event => setBirthRegistrationId(event.target.value)} />
-                {(birthRegistrationId && !isValidBirthRegistrationId) && <p style={{color: 'red'}}>
-                    Birth Registration ID must be between 8 to 20 digits</p>}
-            </div>
+  const saveStudentApplicationData = (e) =>{
+    e.preventDefault();
+    confirmApplication("Save the form?", "draft")
+  }
 
-            <div>
-                <label htmlFor="registration_id">Registration ID:</label>
-                <input
-                    value={registrationId}
-                    id="registration_id"
-                    type="text"
-                    onChange={event => setRegistrationId(event.target.value)} />
-                {(registrationId && !isValidRegistrationId) && <p style={{color: 'red'}}>
-                    Registration ID must be between 8 to 20 digits</p>}
-            </div>
+  const submitStudentApplicationData = (e) => {
+    e.preventDefault();
+    confirmApplication("Submit the form?", "submitted")
+  }
 
-            <div>
-                <label htmlFor="present_address">Present Address:</label>
-                <input
-                    value={presentAddress}
-                    id="present_address"
-                    type="text"
-                    onChange={event => setPresentAddress(event.target.value)} />
-                {(presentAddress && !isValidPresentAddress) && <p style={{color: 'red'}}>
-                    Present Address must be between 5 to 100 characters</p>}
-            </div>
+  return (
+    <React.Fragment>
+      <Toast  id="application_toast"
+              ref={applicationToast}
+              position="top-right"
+              onHide={onToastHide}
+      />
 
-            <div>
-                <label htmlFor="permanent_address">Permanent Address:</label>
-                <input
-                    value={permanentAddress}
-                    id="permanent_address"
-                    type="text"
-                    onChange={event => setPermanentAddress(event.target.value)} />
-                {(permanentAddress && !isValidPermanentAddress) && <p style={{color: 'red'}}>
-                    Permanent Address must be between 5 to 100 characters</p>}
-            </div>
+      <form id="applicationForm" action="none">
+        <div className="p-field p-grid">
+          {/*TODO: use registration Id to retrieve when backend is integrated*/}
+          <label htmlFor="id" className="p-col-fixed" style={{width:'180px'}}>Application id:</label>
+          <div className="p-col">
+            <InputText
+              value={applicationId}
+              id="id"
+              type="text"
+              style={{width:'300px'}}
+              disabled
+            />
+            <small id="id-help" className="p-d-block">
+              Please keep this ID for retrieval.
+            </small>
+          </div>
 
-            <div>
-                <label htmlFor="guardian_name">Guardian Name:</label>
-                <input
-                    value={guardianName}
-                    id="guardian_name"
-                    type="text"
-                    onChange={event => setGuardianName(event.target.value)} />
-                {(guardianName && !isValidGuardianName) && <p style={{color: 'red'}}>
-                    Guardian Name must be between 5 to 50 characters</p>}
-            </div>
+        </div>
 
-            <div>
-                <label htmlFor="guardian_email">Guardian Email:</label>
-                <input
-                    value={guardianEmail}
-                    id="guardian_email"
-                    type="text"
-                    onChange={event => setGuardianEmail(event.target.value)} />
-                {(guardianEmail && !isValidGuardianEmail) && <p style={{color: 'red'}}>
-                    Invalid Guardian Email Entered</p>}
-            </div>
+        <div className="p-field p-grid">
+          <label htmlFor="name" className="p-col-fixed" style={{width:'180px'}}>Student Name:</label>
+          <div className="p-col">
+            <InputText
+              value={name}
+              id="name"
+              type="text"
+              style={{width:'300px'}}
+              onChange={event => setName(event.target.value)} />
+            {(name && !isValidName) && <small id="id-help" className="p-d-block">
+              Name must be between 5 to 50 characters.
+            </small>}
+          </div>
+        </div>
 
-            <div>
-                <label htmlFor="guardian_phone">Guardian Phone:</label>
-                <input
-                    value={guardianPhone}
-                    id="guardian_phone"
-                    type="text"
-                    onChange={event => setGuardianPhone(event.target.value)} />
-                {(guardianPhone && !isValidGuardianPhone) && <p style={{color: 'red'}}>
-                    Invalid Phone Number Entered</p>}
-            </div>
+        <div className="p-field p-grid">
+          <label htmlFor="date_of_birth" className="p-col-fixed" style={{width:'180px'}}>Date of Birth:</label>
+          <div className="p-col">
+            <Calendar
+              monthNavigator
+              yearNavigator
+              yearRange="1900:2100"
+              dateFormat="yy-mm-dd"
+              id="date_of_birth"
+              value={new Date(dateOfBirth)}
+              onChange={event => setDateOfBirth(event.target.value)}
+            />
+          </div>
+        </div>
 
-            <div>
-                <label htmlFor="applied_for_grade">Applied for Grade:</label>
-                <input
-                    value={appliedForGrade}
-                    id="applied_for_grade"
-                    type="text"
-                    onChange={event => setAppliedForGrade(event.target.value)} />
-                {(appliedForGrade && !isValidAppliedForGrade) && <p style={{color: 'red'}}>
-                    Invalid Grade Entered</p>}
-            </div>
+        <div className="p-field p-grid">
+          <label htmlFor="blood_group" className="p-col-fixed" style={{width:'180px'}}>Blood Group:</label>
+          <div className="p-col">
+            <InputText
+              value={bloodGroup}
+              id="blood_group"
+              type="text"
+              style={{width:'300px'}}
+              onChange={event => setBloodGroup(event.target.value)} />
+            {(bloodGroup && !isValidBloodGroup) && <small id="id-help" className="p-d-block">
+              Invalid blood group.
+            </small>}
+          </div>
+        </div>
 
-            <hr/>
+        <div className="p-field p-grid">
+          <label htmlFor="birth_registration_id" className="p-col-fixed" style={{width:'180px'}}>Birth Registration ID:</label>
+          <div className="p-col">
+            <InputText
+              value={birthRegistrationId}
+              id="birth_registration_id"
+              type="text"
+              style={{width:'300px'}}
+              onChange={event => setBirthRegistrationId(event.target.value)} />
+            {(birthRegistrationId && !isValidBirthRegistrationId) && <small id="id-help" className="p-d-block">
+              Birth Registration ID must be between 8 to 20 digits.
+            </small>}
+          </div>
+        </div>
 
-            <button
-                type="button"
-                onClick={saveStudentApplicationData}>
-                Save Draft
-            </button>
+        <div className="p-field p-grid">
+          <label htmlFor="registration_id" className="p-col-fixed" style={{width:'180px'}}>Registration ID:</label>
+          <div className="p-col">
+            <InputText
+              value={registrationId}
+              id="registration_id"
+              type="text"
+              style={{width:'300px'}}
+              onChange={event => setRegistrationId(event.target.value)} />
+            {(registrationId && !isValidRegistrationId) && <small id="id-help" className="p-d-block">
+              Registration ID must be between 8 to 20 digits.
+            </small>}
+          </div>
+        </div>
 
-            <button
-                disabled={!isValidData}
-                type="button"
-                onClick={submitStudentApplicationData}>
-                Submit
-            </button>
-        </form>
-    );
+        <div className="p-field p-grid">
+          <label htmlFor="present_address" className="p-col-fixed" style={{width:'180px'}}>Present Address:</label>
+          <div className="p-col">
+            <InputTextarea
+              value={presentAddress}
+              id="present_address"
+              type="text"
+              style={{width:'300px'}}
+              rows="2"
+              onChange={event => setPresentAddress(event.target.value)} />
+            {(presentAddress && !isValidPresentAddress) && <small id="id-help" className="p-d-block">
+              Present Address must be between 5 to 100 characters.
+            </small>}
+          </div>
+        </div>
+
+        <div className="p-field p-grid">
+          <label htmlFor="permanent_address" className="p-col-fixed" style={{width:'180px'}}>Permanent Address:</label>
+          <div className="p-col">
+            <InputTextarea
+              value={permanentAddress}
+              id="permanent_address"
+              type="text"
+              style={{width:'300px'}}
+              rows="2"
+              onChange={event => setPermanentAddress(event.target.value)} />
+            {(permanentAddress && !isValidPermanentAddress) && <small id="id-help" className="p-d-block">
+              Permanent Address must be between 5 to 100 characters.
+            </small>}
+          </div>
+        </div>
+
+        <div className="p-field p-grid">
+          <label htmlFor="guardian_name" className="p-col-fixed" style={{width:'180px'}}>Guardian Name:</label>
+          <div className="p-col">
+            <InputText
+              value={guardianName}
+              id="guardian_name"
+              type="text"
+              style={{width:'300px'}}
+              onChange={event => setGuardianName(event.target.value)} />
+            {(guardianName && !isValidGuardianName) && <small id="id-help" className="p-d-block">
+              Guardian Name must be between 5 to 50 characters.
+            </small>}
+          </div>
+        </div>
+
+        <div className="p-field p-grid">
+          <label htmlFor="guardian_email" className="p-col-fixed" style={{width:'180px'}}>Guardian Email:</label>
+          <div className="p-col">
+            <InputText
+              value={guardianEmail}
+              id="guardian_email"
+              type="text"
+              style={{width:'300px'}}
+              onChange={event => setGuardianEmail(event.target.value)} />
+            {(guardianEmail && !isValidGuardianEmail) && <small id="id-help" className="p-d-block">
+              Invalid Guardian Email Entered.
+            </small>}
+          </div>
+        </div>
+
+        <div className="p-field p-grid">
+          <label htmlFor="guardian_phone" className="p-col-fixed" style={{width:'180px'}}>Guardian Phone:</label>
+          <div className="p-col">
+            <InputText
+              value={guardianPhone}
+              id="guardian_phone"
+              type="text"
+              style={{width:'300px'}}
+              onChange={event => setGuardianPhone(event.target.value)} />
+            {(guardianPhone && !isValidGuardianPhone) && <small id="id-help" className="p-d-block">
+              Invalid Phone Number Entered.
+            </small>}
+          </div>
+        </div>
+
+        <div className="p-field p-grid">
+          <label htmlFor="applied_for_grade" className="p-col-fixed" style={{width:'180px'}}>Applied for Grade:</label>
+          <div className="p-col">
+            <InputText
+              value={appliedForGrade}
+              id="applied_for_grade"
+              type="text"
+              style={{width:'300px'}}
+              onChange={event => setAppliedForGrade(event.target.value)} />
+            {(appliedForGrade && !isValidAppliedForGrade) && <small id="id-help" className="p-d-block">
+              Invalid Grade Entered.
+            </small>}
+          </div>
+        </div>
+
+        <Divider/>
+
+        <div style={{ margin: "auto", marginBottom: "1em" }}>
+          <Button
+            onClick={saveStudentApplicationData}
+            icon="pi pi-save"
+            className="p-button-success p-mr-2"
+            style={{width:'150px'}}
+            label="Save Draft"
+            disabled={buttonsDisabled}
+          />
+
+          <Button
+            disabled={!isValidData || buttonsDisabled}
+            onClick={submitStudentApplicationData}
+            icon="pi pi-check"
+            className="p-button-primary p-mr-2"
+            style={{width:'150px'}}
+            label="Submit"
+          />
+        </div>
+
+      </form>
+    </React.Fragment>
+
+  );
 }
