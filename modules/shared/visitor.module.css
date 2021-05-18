@@ -1,8 +1,3 @@
-/* Set height to 100% for body and html to enable the background image to cover the whole page: */
-.body {
-  height: 100%
-}
-
 .bgimg {
   /* Background image */
   background-image: url('https://cdn.elearningindustry.com/wp-content/uploads/2016/05/top-10-books-every-college-student-read-e1464023124869.jpeg');

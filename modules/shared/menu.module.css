@@ -1,0 +1,13 @@
+.menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 10%;
+  border-right: 6px solid #ccc;
+}
+
+.menuItem {
+  padding: 5px;
+  margin: 5px;
+}
